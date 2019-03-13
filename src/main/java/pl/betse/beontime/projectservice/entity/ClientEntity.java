@@ -1,13 +1,11 @@
 package pl.betse.beontime.projectservice.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @Entity
 @Table(name = "CLIENT")
 public class ClientEntity {

@@ -1,6 +1,7 @@
 package pl.betse.beontime.projectservice.controller;
 
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.betse.beontime.projectservice.bo.ClientBo;
@@ -8,7 +9,9 @@ import pl.betse.beontime.projectservice.mapper.ClientMapper;
 import pl.betse.beontime.projectservice.model.ClientBody;
 import pl.betse.beontime.projectservice.service.ClientService;
 
+import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -27,12 +30,16 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClientBo>> ListOfAllClients() {
-        return ResponseEntity.ok(clientService.allClients());
+    public ResponseEntity<Resources<ClientBody>> getListOfAllClients() {
+        List<ClientBody> clients = clientService.allClients().stream()
+                .map(clientMapper::mapClientBoToClientBody)
+                .collect(Collectors.toList());
+        clients.forEach(this::addLinks);
+        return ResponseEntity.ok(new Resources<>(clients));
     }
 
     @GetMapping("/{guid}")
-    public ResponseEntity<Resource<ClientBody>> getClientByGuid(@PathVariable String guid) {
+    public ResponseEntity getClientByGuid(@PathVariable String guid) {
         ClientBo clientBo = clientService.getByGuid(guid);
         ClientBody clientBody = clientMapper.mapClientBoToClientBody(clientBo);
         addLinks(clientBody);
@@ -42,20 +49,16 @@ public class ClientController {
     @PostMapping
     public ResponseEntity createClient(@RequestBody ClientBody clientBody) {
         ClientBo clientBo = clientService.addNewClient(clientMapper.mapClientBodyToClientBo(clientBody));
-        return ResponseEntity.ok(clientBo);
+        URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientBo.getId())).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/{guid}")
-    public ResponseEntity<ClientBo> updateClient(@PathVariable("guid") String guid, @RequestBody ClientBody clientBody) {
+    public ResponseEntity updateClient(@PathVariable("guid") String guid, @RequestBody ClientBody clientBody) {
         clientMapper.mapClientBoToClientBody(clientService.updateClient(guid, clientMapper.mapClientBodyToClientBo(clientBody)));
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{guid}")
-    public ResponseEntity<ClientBo> deleteClient(@PathVariable String guid) {
-        clientService.deleteByGuid(guid);
-        return ResponseEntity.ok().build();
-    }
 
     private void addLinks(ClientBody clientBody) {
         clientBody.add(linkTo(methodOn(ClientController.class).getClientByGuid(clientBody.getClientId())).withSelfRel());

@@ -13,25 +13,25 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({ProjectNotFoundException.class})
     public @ResponseBody
-    ResponseEntity<?> sendProjectNotFoundMessage() {
+    ResponseEntity<ExceptionInformation> sendProjectNotFoundMessage() {
         return new ResponseEntity<>(new ExceptionInformation("PROJECT NOT FOUND"), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({ProjectAlreadyExistException.class})
     public @ResponseBody
-    ResponseEntity<?> sendProjectExist() {
+    ResponseEntity<ExceptionInformation> sendProjectExist() {
         return new ResponseEntity<>(new ExceptionInformation("PROJECT ALREADY EXISTS"), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler({ClientNotFoundException.class})
     public @ResponseBody
-    ResponseEntity<?> sendClientNotFoundMessage() {
+    ResponseEntity<ExceptionInformation> sendClientNotFoundMessage() {
         return new ResponseEntity<>(new ExceptionInformation("CLIENT NOT FOUND"), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({ClientAlreadyExistException.class})
     public @ResponseBody
-    ResponseEntity<?> sendClientExist() {
+    ResponseEntity<ExceptionInformation> sendClientExist() {
         return new ResponseEntity<>(new ExceptionInformation("CLIENT ALREADY EXISTS"), HttpStatus.CONFLICT);
     }
 }

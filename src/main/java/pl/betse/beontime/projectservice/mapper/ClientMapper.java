@@ -8,26 +8,26 @@ import pl.betse.beontime.projectservice.entity.ClientEntity;
 import pl.betse.beontime.projectservice.model.ClientBody;
 
 @Mapper(componentModel = "spring", uses = GuidMapper.class)
-public abstract class ClientMapper {
+ public interface ClientMapper {
 
     @Mappings(
             @Mapping(source = "guid", target = "id")
     )
-    public abstract ClientBo mapClientEntityToClientBo(ClientEntity clientEntity);
+    ClientBo mapClientEntityToClientBo(ClientEntity clientEntity);
 
     @Mappings(
             @Mapping(source = "id", target = "guid", qualifiedByName = "mapGuid")
     )
-    public abstract ClientEntity mapClientBoToClientEntity(ClientBo clientBo);
+    ClientEntity mapClientBoToClientEntity(ClientBo clientBo);
 
     @Mappings(
             @Mapping(source = "id", target = "clientId")
     )
-    public abstract ClientBody mapClientBoToClientBody(ClientBo clientBo);
+    ClientBody mapClientBoToClientBody(ClientBo clientBo);
 
     @Mappings(
             @Mapping(source = "clientId", target = "id")
     )
-    public abstract ClientBo mapClientBodyToClientBo(ClientBody clientBody);
+    ClientBo mapClientBodyToClientBo(ClientBody clientBody);
 
 }

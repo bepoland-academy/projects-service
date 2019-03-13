@@ -56,10 +56,4 @@ public class ClientService {
         return clientMapper.mapClientEntityToClientBo(clientEntity);
     }
 
-    public void deleteByGuid(String guid) {
-        ClientEntity clientEntity = clientRepository
-                .findByGuid(guid)
-                .orElseThrow(ClientNotFoundException::new);
-        clientRepository.delete(clientEntity);
-    }
 }
