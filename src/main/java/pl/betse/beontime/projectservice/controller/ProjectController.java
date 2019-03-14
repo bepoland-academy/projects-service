@@ -5,6 +5,7 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.betse.beontime.projectservice.bo.ProjectBo;
+import pl.betse.beontime.projectservice.exception.ProjectNoClientException;
 import pl.betse.beontime.projectservice.mapper.ProjectMapper;
 import pl.betse.beontime.projectservice.model.ProjectBody;
 import pl.betse.beontime.projectservice.service.ProjectService;
@@ -54,6 +55,9 @@ public class ProjectController {
 
     @PutMapping(path = "/{guid}")
     public ResponseEntity updateProject(@PathVariable("guid") String projectGuid, @RequestBody ProjectBody projectBody) {
+        if (projectBody.getClient() == null) {
+            throw new ProjectNoClientException();
+        }
         projectMapper.mapProjectBoToProjectBody(projectService.updateProject(projectGuid, projectMapper.mapProjectBodyToProjectBo(projectBody)));
         return ResponseEntity.ok().build();
     }

@@ -8,7 +8,6 @@ import pl.betse.beontime.projectservice.entity.ClientEntity;
 import pl.betse.beontime.projectservice.entity.ProjectEntity;
 import pl.betse.beontime.projectservice.exception.ClientNotFoundException;
 import pl.betse.beontime.projectservice.exception.ProjectAlreadyExistException;
-import pl.betse.beontime.projectservice.exception.ProjectNoClientException;
 import pl.betse.beontime.projectservice.exception.ProjectNotFoundException;
 import pl.betse.beontime.projectservice.mapper.ProjectMapper;
 import pl.betse.beontime.projectservice.repository.ClientRepository;
@@ -52,12 +51,10 @@ public class ProjectService {
         if (projectRepository.findByGuid(projectBo.getId()).isPresent()) {
             throw new ProjectAlreadyExistException();
         }
-
         ProjectEntity projectEntity = projectMapper.mapProjectBoToProjectEntity(projectBo);
-        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientBo().getClientId()).orElseThrow(ClientNotFoundException::new);
-
+        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientBo().getClientId())
+                .orElseThrow(ClientNotFoundException::new);
         projectEntity.setClientEntity(clientEntity);
-
         projectRepository.save(projectEntity);
         return projectMapper.mapProjectEntityToProjectBo(projectEntity);
     }
@@ -65,9 +62,6 @@ public class ProjectService {
     public ProjectBo updateProject(String guid, ProjectBo projectBo) {
         ProjectEntity projectEntity = projectRepository.findByGuid(guid)
                 .orElseThrow(ProjectNotFoundException::new);
-        if (projectBo.getClientBo() == null) {
-            throw new ProjectNoClientException();
-        }
         updateProjectFields(projectBo, projectEntity);
         projectRepository.save(projectEntity);
         return projectMapper.mapProjectEntityToProjectBo(projectEntity);
