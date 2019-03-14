@@ -34,6 +34,12 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
     ResponseEntity<ExceptionInformation> sendClientExist() {
         return new ResponseEntity<>(new ExceptionInformation("CLIENT ALREADY EXISTS"), HttpStatus.CONFLICT);
     }
+
+    @ExceptionHandler({ProjectNoClientException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendProjectNoClientException() {
+        return new ResponseEntity<>(new ExceptionInformation("CLIENT SHOULD BE ASSIGNED TO PROJECT"), HttpStatus.BAD_REQUEST);
+    }
 }
 
 

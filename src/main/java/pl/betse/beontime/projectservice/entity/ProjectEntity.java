@@ -5,7 +5,6 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @Entity
@@ -20,7 +19,7 @@ public class ProjectEntity {
     @Column(name = "PROJECT_GUID", nullable = false, unique = true)
     private String guid;
 
-    @Column(name = "PROJECT_NAME", nullable = false, unique = true)
+    @Column(name = "PROJECT_NAME", nullable = false)
     private String name;
 
     @Column(name = "PROJECT_RATE")
@@ -30,14 +29,14 @@ public class ProjectEntity {
     @Column(name = "COMMENTS")
     private String comments;
 
-    @ManyToMany
-    @JoinTable(name = "CLIENT_PROJECT",
-            joinColumns = @JoinColumn(name = "PROJECT_ID"),
-            inverseJoinColumns = @JoinColumn(name = "CLIENT_ID"))
-    private List<ClientEntity> clientEntities;
+    @ManyToOne
+    @JoinColumn(name = "CLIENT_ID")
+    private ClientEntity clientEntity;
 
-    @Column(name = "DEPARTMENT_ID")
-    private String departmentId;
+    @Column(name = "DEPARTMENT_GUID")
+    private String departmentGuid;
 
+    @Column(name = "ACTIVE")
+    private boolean active;
 
 }

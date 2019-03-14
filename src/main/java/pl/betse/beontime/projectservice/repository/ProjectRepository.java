@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     Optional<ProjectEntity> findByGuid(String guid);
 
-    Optional<List<ProjectEntity>> findProjectByDepartmentId(String departmentId);
+    Optional<List<ProjectEntity>> findProjectByDepartmentGuid(String departmentGuid);
 }

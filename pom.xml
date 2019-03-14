@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>pl.betse.beontime</groupId>
-    <artifactId>project-service</artifactId>
+    <artifactId>projects-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <parent>

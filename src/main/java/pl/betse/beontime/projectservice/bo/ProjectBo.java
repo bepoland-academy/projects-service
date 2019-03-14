@@ -13,5 +13,7 @@ public class ProjectBo {
     private String name;
     private BigDecimal rate;
     private String comments;
-    private String departmentId;
+    private String departmentGuid;
+    private ClientBo clientBo;
+    private boolean active;
 }

@@ -49,7 +49,7 @@ public class ClientController {
     @PostMapping
     public ResponseEntity createClient(@RequestBody ClientBody clientBody) {
         ClientBo clientBo = clientService.addNewClient(clientMapper.mapClientBodyToClientBo(clientBody));
-        URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientBo.getId())).toUri();
+        URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientBo.getClientId())).toUri();
         return ResponseEntity.created(location).build();
     }
 

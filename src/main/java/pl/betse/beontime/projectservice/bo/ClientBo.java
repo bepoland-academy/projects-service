@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ClientBo {
 
-    private String id;
+    private String clientId;
     private String name;
 }

@@ -3,7 +3,6 @@ package pl.betse.beontime.projectservice.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
@@ -21,8 +20,6 @@ public class ClientEntity {
     @Column(name = "CLIENT_NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "clientEntities")
-    private List<ProjectEntity> projectEntities;
 }
 
 

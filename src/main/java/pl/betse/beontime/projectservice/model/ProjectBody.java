@@ -19,4 +19,6 @@ public class ProjectBody extends ResourceSupport {
     private BigDecimal rate;
     private String comments;
     private String department;
+    private ClientBody client;
+    private boolean active;
 }
