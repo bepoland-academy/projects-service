@@ -20,18 +20,14 @@ public interface ProjectMapper {
     @Mapping(source = "departmentGuid", target = "departmentGuid")
     ProjectEntity mapProjectBoToProjectEntity(ProjectBo projectBo);
 
-
     @Mapping(source = "id", target = "projectId")
     @Mapping(source = "clientBo", target = "client")
     @Mapping(source = "departmentGuid", target = "department")
-
     ProjectBody mapProjectBoToProjectBody(ProjectBo projectBo);
-
 
     @Mapping(source = "projectId", target = "id")
     @Mapping(source = "client", target = "clientBo")
     @Mapping(source = "department", target = "departmentGuid")
-
     ProjectBo mapProjectBodyToProjectBo(ProjectBody projectBody);
 
 }
