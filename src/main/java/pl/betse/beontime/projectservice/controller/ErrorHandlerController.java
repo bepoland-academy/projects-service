@@ -1,0 +1,46 @@
+package pl.betse.beontime.projectservice.controller;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import pl.betse.beontime.projectservice.exception.*;
+
+@RestControllerAdvice
+public class ErrorHandlerController extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({ProjectNotFoundException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendProjectNotFoundMessage() {
+        return new ResponseEntity<>(new ExceptionInformation("PROJECT NOT FOUND"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ProjectAlreadyExistException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendProjectExist() {
+        return new ResponseEntity<>(new ExceptionInformation("PROJECT ALREADY EXISTS"), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({ClientNotFoundException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendClientNotFoundMessage() {
+        return new ResponseEntity<>(new ExceptionInformation("CLIENT NOT FOUND"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({ClientAlreadyExistException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendClientExist() {
+        return new ResponseEntity<>(new ExceptionInformation("CLIENT ALREADY EXISTS"), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler({ProjectNoClientException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendProjectNoClientException() {
+        return new ResponseEntity<>(new ExceptionInformation("CLIENT SHOULD BE ASSIGNED TO PROJECT"), HttpStatus.BAD_REQUEST);
+    }
+}
+
+
+

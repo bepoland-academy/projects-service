@@ -1,0 +1,44 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="create_project_service_v1" author="">
+        <createTable tableName="project">
+            <column name="project_id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="project_guid" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="project_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_rate" type="NUMBER"/>
+            <column name="comments" type="VARCHAR(1000)"/>
+            <column name="department_guid" type="VARCHAR(255)"/>
+            <column name="client_id" type="BIGINT"/>
+            <column name="active" type="VARCHAR(1)"/>
+        </createTable>
+        <createTable tableName="client">
+            <column name="client_id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="client_guid" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="client_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="project" baseColumnNames="client_id" constraintName="project_client_fk"
+                                 referencedTableName="client"
+                                 referencedColumnNames="client_id"/>
+        <sqlFile dbms="mysql"
+                 encoding="utf8"
+                 path="data.sql"
+                 relativeToChangelogFile="true"
+                 splitStatements="true"
+                 stripComments="true"/>
+    </changeSet>
+
+</databaseChangeLog>
