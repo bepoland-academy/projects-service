@@ -48,6 +48,9 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity createProject(@RequestBody ProjectBody projectBody) {
+        if (projectBody.getClient() == null ) {
+            throw new ProjectNoClientException();
+        }
         ProjectBo projectBo = projectService.addNewProject(projectMapper.mapProjectBodyToProjectBo(projectBody));
         URI location = linkTo(methodOn(ProjectController.class).getProjectByGuid(projectBo.getId())).toUri();
         return ResponseEntity.created(location).build();
