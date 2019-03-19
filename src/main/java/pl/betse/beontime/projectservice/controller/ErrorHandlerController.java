@@ -1,12 +1,18 @@
 package pl.betse.beontime.projectservice.controller;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import pl.betse.beontime.projectservice.exception.*;
+
+import java.util.ArrayList;
 
 @RestControllerAdvice
 public class ErrorHandlerController extends ResponseEntityExceptionHandler {
@@ -39,6 +45,15 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
     public @ResponseBody
     ResponseEntity<ExceptionInformation> sendProjectNoClientException() {
         return new ResponseEntity<>(new ExceptionInformation("CLIENT SHOULD BE ASSIGNED TO PROJECT"), HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        ArrayList<ExceptionInformation> errors = new ArrayList<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.add(new ExceptionInformation(error.getDefaultMessage()));
+        }
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 }
 

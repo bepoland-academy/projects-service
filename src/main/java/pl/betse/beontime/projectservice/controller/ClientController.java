@@ -9,6 +9,7 @@ import pl.betse.beontime.projectservice.mapper.ClientMapper;
 import pl.betse.beontime.projectservice.model.ClientBody;
 import pl.betse.beontime.projectservice.service.ClientService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity createClient(@RequestBody ClientBody clientBody) {
+    public ResponseEntity createClient(@RequestBody @Valid ClientBody clientBody) {
         ClientBo clientBo = clientService.addNewClient(clientMapper.mapClientBodyToClientBo(clientBody));
         URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientBo.getClientId())).toUri();
         return ResponseEntity.created(location).build();

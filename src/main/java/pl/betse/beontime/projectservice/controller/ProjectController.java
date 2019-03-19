@@ -3,6 +3,7 @@ package pl.betse.beontime.projectservice.controller;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.betse.beontime.projectservice.bo.ProjectBo;
 import pl.betse.beontime.projectservice.exception.ProjectNoClientException;
@@ -10,6 +11,7 @@ import pl.betse.beontime.projectservice.mapper.ProjectMapper;
 import pl.betse.beontime.projectservice.model.ProjectBody;
 import pl.betse.beontime.projectservice.service.ProjectService;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,15 @@ public class ProjectController {
     public ProjectController(ProjectMapper projectMapper, ProjectService projectService) {
         this.projectMapper = projectMapper;
         this.projectService = projectService;
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<Resources<ProjectBody>> getListOfAllProjects() {
+        List<ProjectBody> projects = projectService.allProjects().stream()
+                .map(projectMapper::mapProjectBoToProjectBody)
+                .collect(Collectors.toList());
+        projects.forEach(this::addLinks);
+        return ResponseEntity.ok(new Resources<>(projects));
     }
 
     @GetMapping("/{guid}")
@@ -47,7 +58,7 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity createProject(@RequestBody ProjectBody projectBody) {
+    public ResponseEntity createProject(@RequestBody @Valid ProjectBody projectBody) {
         if (projectBody.getClient() == null ) {
             throw new ProjectNoClientException();
         }

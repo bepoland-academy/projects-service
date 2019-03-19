@@ -31,6 +31,13 @@ public class ProjectService {
         this.projectMapper = projectMapper;
     }
 
+    public List<ProjectBo> allProjects() {
+        return projectRepository.findAll()
+                .stream()
+                .map(projectMapper::mapProjectEntityToProjectBo)
+                .collect(Collectors.toList());
+    }
+
     public ProjectBo getProjectByGuid(String guid) {
         ProjectEntity projectEntity = projectRepository
                 .findByGuid(guid)
