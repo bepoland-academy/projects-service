@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.hateoas.ResourceSupport;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -16,7 +17,6 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = false)
 public class ProjectBody extends ResourceSupport {
 
-    @JsonIgnore
     private String projectId;
     @NotNull(message = "Name can't be null")
     @NotEmpty(message = "Name can't be empty")
