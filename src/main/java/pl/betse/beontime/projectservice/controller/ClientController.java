@@ -1,5 +1,7 @@
 package pl.betse.beontime.projectservice.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import pl.betse.beontime.projectservice.service.ClientService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +27,9 @@ public class ClientController {
 
     private final ClientMapper clientMapper;
     private final ClientService clientService;
+
+    @Value("${api-prefix}")
+    private String API_PREFIX;
 
     public ClientController(ClientMapper clientMapper, ClientService clientService) {
         this.clientMapper = clientMapper;
@@ -48,10 +54,10 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity createClient(@RequestBody @Valid ClientBody clientBody) {
+    public ResponseEntity createClient(@RequestBody @Valid ClientBody clientBody) throws URISyntaxException {
         ClientBo clientBo = clientService.addNewClient(clientMapper.mapClientBodyToClientBo(clientBody));
         URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientBo.getClientId())).toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(new URI(API_PREFIX + location.getPath())).build();
     }
 
     @PutMapping("/{guid}")
@@ -62,7 +68,12 @@ public class ClientController {
 
 
     private void addLinks(ClientBody clientBody) {
-        clientBody.add(linkTo(methodOn(ClientController.class).getClientByGuid(clientBody.getClientId())).withSelfRel());
+        clientBody.add(constructLink(clientBody.getClientId()));
+    }
+
+    private Link constructLink(String clientGuid) {
+        URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientGuid)).toUri();
+        return new Link(API_PREFIX + location.getPath()).withSelfRel();
     }
 
 
