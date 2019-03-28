@@ -1,9 +1,10 @@
 package pl.betse.beontime.projectservice.controller;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import pl.betse.beontime.projectservice.bo.ProjectBo;
 import pl.betse.beontime.projectservice.exception.ProjectNoClientException;
@@ -13,6 +14,7 @@ import pl.betse.beontime.projectservice.service.ProjectService;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,9 @@ public class ProjectController {
 
     private final ProjectMapper projectMapper;
     private final ProjectService projectService;
+
+    @Value("${api-prefix}")
+    private String API_PREFIX;
 
     public ProjectController(ProjectMapper projectMapper, ProjectService projectService) {
         this.projectMapper = projectMapper;
@@ -58,13 +63,13 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity createProject(@RequestBody @Valid ProjectBody projectBody) {
-        if (projectBody.getClient() == null ) {
+    public ResponseEntity createProject(@RequestBody @Valid ProjectBody projectBody) throws URISyntaxException {
+        if (projectBody.getClient() == null) {
             throw new ProjectNoClientException();
         }
         ProjectBo projectBo = projectService.addNewProject(projectMapper.mapProjectBodyToProjectBo(projectBody));
         URI location = linkTo(methodOn(ProjectController.class).getProjectByGuid(projectBo.getId())).toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(new URI(API_PREFIX + location.getPath())).build();
     }
 
     @PutMapping(path = "/{guid}")
@@ -83,8 +88,14 @@ public class ProjectController {
     }
 
     private void addLinks(ProjectBody projectBody) {
-        projectBody.add(linkTo(methodOn(ProjectController.class).getProjectByGuid(projectBody.getProjectId())).withSelfRel());
-        projectBody.add(linkTo(methodOn(ProjectController.class).deleteProject(projectBody.getProjectId())).withRel("DELETE"));
+        Link link = constructLink(projectBody.getProjectId());
+        projectBody.add(link);
+        projectBody.add(link.withRel("DELETE"));
+    }
+
+    private Link constructLink(String projectGuid) {
+        URI location = linkTo(methodOn(ProjectController.class).getProjectByGuid(projectGuid)).toUri();
+        return new Link(API_PREFIX + location.getPath()).withSelfRel();
     }
 
 }
