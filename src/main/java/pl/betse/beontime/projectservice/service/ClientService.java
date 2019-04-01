@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import pl.betse.beontime.projectservice.bo.ClientBo;
 import pl.betse.beontime.projectservice.entity.ClientEntity;
 import pl.betse.beontime.projectservice.exception.ClientAlreadyExistException;
+import pl.betse.beontime.projectservice.exception.ClientAssignedToProjectException;
 import pl.betse.beontime.projectservice.exception.ClientNotFoundException;
 import pl.betse.beontime.projectservice.mapper.ClientMapper;
 import pl.betse.beontime.projectservice.repository.ClientRepository;
+import pl.betse.beontime.projectservice.repository.ProjectRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,12 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class ClientService {
 
-    private ClientRepository clientRepository;
-    private ClientMapper clientMapper;
+    private final ClientRepository clientRepository;
+    private final ClientMapper clientMapper;
+    private final ProjectRepository projectRepository;
 
-    public ClientService(ClientRepository clientRepository, ClientMapper clientMapper) {
+    public ClientService(ClientRepository clientRepository, ClientMapper clientMapper, ProjectRepository projectRepository) {
         this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
+        this.projectRepository = projectRepository;
     }
 
     public List<ClientBo> allClients() {
@@ -54,6 +58,17 @@ public class ClientService {
         clientEntity.setName(clientBo.getName() == null ? clientEntity.getName() : clientBo.getName());
         clientRepository.save(clientEntity);
         return clientMapper.mapClientEntityToClientBo(clientEntity);
+    }
+
+    public void deleteClient(String guid) {
+        ClientEntity clientEntity = clientRepository
+                .findByGuid(guid)
+                .orElseThrow(ClientNotFoundException::new);
+        if (projectRepository.existsByClientEntity(clientEntity)) {
+            log.error("Client cannot be deleted because of assignment to project.");
+            throw new ClientAssignedToProjectException();
+        }
+        clientRepository.delete(clientEntity);
     }
 
 }
