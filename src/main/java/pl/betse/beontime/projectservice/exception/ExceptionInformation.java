@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public class ExceptionInformation {
-    private String exceptionMessage;
+    private String message;
 
 
-    public ExceptionInformation(String exceptionMessage) {
-        this.exceptionMessage = exceptionMessage;
+    public ExceptionInformation(String message) {
+        this.message = message;
     }
 }

@@ -47,6 +47,18 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ExceptionInformation("CLIENT SHOULD BE ASSIGNED TO PROJECT"), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({TimeEntriesForProjectExists.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendTimeEntriesForProjectExistsException() {
+        return new ResponseEntity<>(new ExceptionInformation("PROJECT CANNOT BE DELETED BECAUSE OF EXISTING TIME ENTRIES"), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ClientAssignedToProjectException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendClientAssignedToProjectExceptionException() {
+        return new ResponseEntity<>(new ExceptionInformation("CLIENT CANNOT BE DELETED BECAUSE OF ASSIGNMENT TO THE PROJECT"), HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ArrayList<ExceptionInformation> errors = new ArrayList<>();

@@ -66,6 +66,12 @@ public class ClientController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/{guid}")
+    public ResponseEntity deleteClient(@PathVariable("guid") String guid) {
+        clientService.deleteClient(guid);
+        return ResponseEntity.ok().build();
+    }
+
 
     private void addLinks(ClientBody clientBody) {
         clientBody.add(constructLink(clientBody.getClientId()));
