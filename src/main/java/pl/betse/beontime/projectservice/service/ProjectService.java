@@ -8,10 +8,7 @@ import org.springframework.web.client.RestTemplate;
 import pl.betse.beontime.projectservice.bo.ProjectBo;
 import pl.betse.beontime.projectservice.entity.ClientEntity;
 import pl.betse.beontime.projectservice.entity.ProjectEntity;
-import pl.betse.beontime.projectservice.exception.ClientNotFoundException;
-import pl.betse.beontime.projectservice.exception.ProjectAlreadyExistException;
-import pl.betse.beontime.projectservice.exception.ProjectNotFoundException;
-import pl.betse.beontime.projectservice.exception.TimeEntriesForProjectExists;
+import pl.betse.beontime.projectservice.exception.*;
 import pl.betse.beontime.projectservice.mapper.ProjectMapper;
 import pl.betse.beontime.projectservice.repository.ClientRepository;
 import pl.betse.beontime.projectservice.repository.ProjectRepository;
@@ -89,6 +86,10 @@ public class ProjectService {
         if (!isTimeEntryForProjectExist) {
             ProjectEntity projectEntity = projectRepository.findByGuid(guid)
                     .orElseThrow(ProjectNotFoundException::new);
+            if (projectEntity.isActive()) {
+                log.error("Project cannot be deleted while is active");
+                throw new ProjectIsActiveException();
+            }
             projectRepository.delete(projectEntity);
         } else {
             log.error("Project with guid =" + guid + " cannot be deleted because time entries exist.");
