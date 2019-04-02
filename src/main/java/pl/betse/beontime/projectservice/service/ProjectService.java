@@ -102,7 +102,6 @@ public class ProjectService {
         projectEntity.setClientEntity(clientEntity);
         projectEntity.setName(projectBo.getName() == null ? projectEntity.getName() : projectBo.getName());
         projectEntity.setComments(projectBo.getComments() == null ? projectEntity.getComments() : projectBo.getComments());
-        projectEntity.setRate(projectBo.getRate() == null ? projectEntity.getRate() : projectBo.getRate());
         projectEntity.setActive(projectBo.isActive());
     }
 }
