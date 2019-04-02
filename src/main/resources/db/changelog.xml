@@ -13,7 +13,6 @@
             <column name="project_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="project_rate" type="NUMBER"/>
             <column name="comments" type="VARCHAR(1000)"/>
             <column name="department_guid" type="VARCHAR(255)"/>
             <column name="client_id" type="BIGINT"/>
@@ -32,13 +31,52 @@
         </createTable>
         <addForeignKeyConstraint baseTableName="project" baseColumnNames="client_id" constraintName="project_client_fk"
                                  referencedTableName="client"
-                                 referencedColumnNames="client_id"/>
+        referencedColumnNames="client_id"/>
+
+        <createTable tableName="project_rate">
+            <column name="rate_id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="project_guid" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="project_role_guid" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="project_rate" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="on_site" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="project_assignment">
+            <column name="assignment_id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="project_rate_id" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="user_guid" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="project_role">
+            <column name="role_id" autoIncrement="true" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="role_name" value="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
         <sqlFile dbms="mysql"
                  encoding="utf8"
                  path="data.sql"
                  relativeToChangelogFile="true"
                  splitStatements="true"
-                 stripComments="true"/>
+        stripComments="true"/>
     </changeSet>
 
 </databaseChangeLog>
