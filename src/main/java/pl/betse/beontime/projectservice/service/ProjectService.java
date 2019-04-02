@@ -28,8 +28,6 @@ public class ProjectService {
     @Value("${api-project-exist}")
     private String API_PROJECT_EXIST;
 
-    String tempPrefix = "http://localhost:8088";
-
     public ProjectService(ProjectRepository projectRepository, ClientRepository clientRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.clientRepository = clientRepository;
