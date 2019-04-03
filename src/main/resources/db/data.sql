@@ -1,10 +1,10 @@
-insert into PROJECTS_DB.project_role (project_role_id, name) values
-(1,'Junior Java Developer'),
-(2, 'Junior Frontend Developer'),
-(3, 'Solution Architect'),
-(4, 'Scrum Master'),
-(5, 'Senior Java Developer'),
-(6, 'Senior Frontend Developer');
+insert into PROJECTS_DB.project_role (project_role_id,project_role_guid, name) values
+(1,'4ce62627-5d4f-47a7-89d6-4093a092d78b','Junior Java Developer'),
+(2,'e708be40-4f2b-4f6f-b848-6dd2fa09bb20', 'Junior Frontend Developer'),
+(3,'47520d35-98e8-4953-b09f-ab70f5935764', 'Solution Architect'),
+(4,'ca8cb011-c54d-4f90-9d2f-f063c6028aaf', 'Scrum Master'),
+(5,'f1194145-8aff-47a4-9d64-9b1ecf64ce70', 'Senior Java Developer'),
+(6,'13437d8c-a7ba-4b9f-9864-b84cf3738256', 'Senior Frontend Developer');
 
 insert into PROJECTS_DB.client (client_id, client_guid, client_name)
 values (1, '0c16fdba-3f83-4af3-a41e-2834ea5d0874', 'PZU');
