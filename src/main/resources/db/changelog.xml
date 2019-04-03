@@ -19,6 +19,7 @@
             <column name="department_guid" type="VARCHAR(255)"/>
             <column name="client_id" type="BIGINT"/>
             <column name="active" type="VARCHAR(1)"/>
+            <column name="rate" type="NUMBER"/>
         </createTable>
 
         <createTable tableName="client">
@@ -62,7 +63,7 @@
                 <constraints nullable="false" unique="true"/>
             </column>
             <column name="project_role_guid" type="VARCHAR(255)">
-                <constraints nullable="false" unique="true"/>
+                <constraints unique="true"/>
             </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>

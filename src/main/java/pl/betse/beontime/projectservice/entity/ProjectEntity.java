@@ -37,4 +37,7 @@ public class ProjectEntity {
     @Column(name = "ACTIVE")
     private boolean active;
 
+    @Column(name = "RATE")
+    private BigDecimal rate;
+
 }

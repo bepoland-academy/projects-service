@@ -21,7 +21,7 @@ public class ProjectRateEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "PROJECT_ROLE_ID")
-    private ProjectRolesEntity projectRolesEntity;
+    private ProjectRoleEntity projectRoleEntity;
 
     @Column(name = "RATE")
     private BigDecimal rate;

@@ -13,4 +13,5 @@ public class ProjectBo {
     private String departmentGuid;
     private ClientBo clientBo;
     private boolean active;
+    private BigDecimal rate;
 }

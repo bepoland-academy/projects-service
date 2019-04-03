@@ -24,4 +24,6 @@ public class ProjectBody extends ResourceSupport {
     private String department;
     private ClientBody client;
     private boolean active;
+    @NotNull(message = "Rate can't be null")
+    private BigDecimal rate;
 }

@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class RateBo {
 
     private ProjectBo projectBo;
-    private RolesBo rolesBo;
+    private RoleBo roleBo;
     private BigDecimal rate;
     private boolean onSite;
 }

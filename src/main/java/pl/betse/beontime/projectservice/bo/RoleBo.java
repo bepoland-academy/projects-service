@@ -3,7 +3,7 @@ package pl.betse.beontime.projectservice.bo;
 import lombok.Data;
 
 @Data
-public class RolesBo {
+public class RoleBo {
 
     private String roleId;
 

@@ -71,6 +71,18 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ExceptionInformation("ROLE ALREADY EXISTS"), HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler({RoleNotFoundException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendRoleNotFoundMessage() {
+        return new ResponseEntity<>(new ExceptionInformation("ROLE NOT FOUND"), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({RoleAssignedToRateException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendRoleisAssignedToRate() {
+        return new ResponseEntity<>(new ExceptionInformation("ROLE IS ASSIGNED TO RATE"), HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ArrayList<ExceptionInformation> errors = new ArrayList<>();
