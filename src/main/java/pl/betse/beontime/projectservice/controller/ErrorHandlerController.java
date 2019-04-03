@@ -65,6 +65,12 @@ public class ErrorHandlerController extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ExceptionInformation("ACTIVE PROJECT CANNOT BE DELETED"), HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler({RoleAlreadyExistsException.class})
+    public @ResponseBody
+    ResponseEntity<ExceptionInformation> sendRoleExist() {
+        return new ResponseEntity<>(new ExceptionInformation("ROLE ALREADY EXISTS"), HttpStatus.CONFLICT);
+    }
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         ArrayList<ExceptionInformation> errors = new ArrayList<>();

@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 public class ClientBody extends ResourceSupport {
 
     private String clientId;
+
     @NotNull(message = "Name can't be null")
     @NotEmpty(message = "Name can't be empty")
     private String name;

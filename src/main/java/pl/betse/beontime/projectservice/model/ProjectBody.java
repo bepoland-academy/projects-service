@@ -19,7 +19,6 @@ public class ProjectBody extends ResourceSupport {
     @NotNull(message = "Name can't be null")
     @NotEmpty(message = "Name can't be empty")
     private String name;
-    private BigDecimal rate;
     @Length(max = 500, message = "Comment should contains max. 500 characters")
     private String comments;
     private String department;

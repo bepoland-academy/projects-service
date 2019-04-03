@@ -1,13 +1,13 @@
 package pl.betse.beontime.projectservice.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import pl.betse.beontime.projectservice.bo.RolesBo;
 import pl.betse.beontime.projectservice.mapper.RoleMapper;
 import pl.betse.beontime.projectservice.model.RoleBody;
 import pl.betse.beontime.projectservice.service.RoleService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,12 +24,18 @@ public class RolesController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<RoleBody>> getListOfAllRoles(){
+    public ResponseEntity<List<RoleBody>> getListOfAllRoles() {
         List<RoleBody> roles = roleService.allRoles()
                 .stream()
                 .map(roleMapper::mapRoleBoToRoleBody)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(roles);
+    }
+
+    @PostMapping
+    public ResponseEntity createRole(@RequestBody @Valid RoleBody roleBody) {
+        RolesBo rolesBo = roleService.addNewRole(roleMapper.mapRoleBodyToRoleBo(roleBody));
+        return ResponseEntity.ok(rolesBo);
     }
 
 

@@ -12,6 +12,8 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = false)
 public class RoleBody {
 
+    private String roleId;
+
     @NotNull(message = "Name can't be null")
     @NotEmpty(message = "Name can't be empty")
     private String name;
