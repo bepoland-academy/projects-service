@@ -9,7 +9,6 @@ public class ProjectBo {
 
     private String id;
     private String name;
-    private BigDecimal rate;
     private String comments;
     private String departmentGuid;
     private ClientBo clientBo;
