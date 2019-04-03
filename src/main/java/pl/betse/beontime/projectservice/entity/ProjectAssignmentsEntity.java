@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "PROJECT_ASSIGNMENTS")
+@Table(name = "PROJECT_ASSIGNMENT")
 public class ProjectAssignmentsEntity {
 
 
