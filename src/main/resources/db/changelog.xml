@@ -61,6 +61,9 @@
             <column name="project_role_id" autoIncrement="true" type="BIGINT">
                 <constraints nullable="false" unique="true"/>
             </column>
+            <column name="project_role_guid" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
             <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
