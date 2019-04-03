@@ -72,7 +72,6 @@ public class ClientController {
         return ResponseEntity.ok().build();
     }
 
-
     private void addLinks(ClientBody clientBody) {
         clientBody.add(constructLink(clientBody.getClientId()));
     }
@@ -81,6 +80,5 @@ public class ClientController {
         URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientGuid)).toUri();
         return new Link(API_PREFIX + location.getPath()).withSelfRel();
     }
-
 
 }

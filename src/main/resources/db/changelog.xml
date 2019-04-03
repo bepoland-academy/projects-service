@@ -2,7 +2,9 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
     <changeSet id="create_project_service_v1" author="">
+
         <createTable tableName="project">
             <column name="project_id" autoIncrement="true" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" unique="true"/>
@@ -13,12 +15,13 @@
             <column name="project_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="project_rate" type="NUMBER"/>
             <column name="comments" type="VARCHAR(1000)"/>
             <column name="department_guid" type="VARCHAR(255)"/>
             <column name="client_id" type="BIGINT"/>
             <column name="active" type="VARCHAR(1)"/>
+            <column name="rate" type="NUMBER"/>
         </createTable>
+
         <createTable tableName="client">
             <column name="client_id" autoIncrement="true" type="BIGINT">
                 <constraints primaryKey="true" nullable="false" unique="true"/>
@@ -30,9 +33,75 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="project" baseColumnNames="client_id" constraintName="project_client_fk"
+
+        <addForeignKeyConstraint baseTableName="project"
+                                 baseColumnNames="client_id"
+                                 constraintName="project_client_fk"
                                  referencedTableName="client"
                                  referencedColumnNames="client_id"/>
+
+        <createTable tableName="project_rate">
+            <column name="project_rate_id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" unique="true"/>
+            </column>
+            <column name="project_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="project_role_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rate" type="NUMBER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="on_site" type="VARCHAR(1)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="project_role">
+            <column name="project_role_id" autoIncrement="true" type="BIGINT">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="project_role_guid" type="VARCHAR(255)">
+                <constraints unique="true"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="project_rate"
+                                 baseColumnNames="project_id"
+                                 constraintName="project_project_rate_FK"
+                                 referencedTableName="project"
+                                 referencedColumnNames="project_id"/>
+
+        <addForeignKeyConstraint baseTableName="project_rate"
+                                 baseColumnNames="project_role_id"
+                                 constraintName="project_role_project_rate_FK"
+                                 referencedTableName="project_role"
+                                 referencedColumnNames="project_role_id"/>
+
+
+        <createTable tableName="project_assignment">
+            <column name="project_assignment_id" autoIncrement="true" type="BIGINT">
+                <constraints primaryKey="true" unique="true" nullable="false"/>
+            </column>
+            <column name="project_rate_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_guid" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="project_assignment"
+                                 baseColumnNames="project_rate_id"
+                                 constraintName="project_rate_project_assignment_FK"
+                                 referencedTableName="project_rate"
+                                 referencedColumnNames="project_rate_id"/>
+
+
         <sqlFile dbms="mysql"
                  encoding="utf8"
                  path="data.sql"

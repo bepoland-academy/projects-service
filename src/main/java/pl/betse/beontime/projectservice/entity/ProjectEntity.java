@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Entity
@@ -22,9 +23,6 @@ public class ProjectEntity {
     @Column(name = "PROJECT_NAME", nullable = false)
     private String name;
 
-    @Column(name = "PROJECT_RATE")
-    private BigDecimal rate;
-
     @Length(max = 500)
     @Column(name = "COMMENTS")
     private String comments;
@@ -38,5 +36,8 @@ public class ProjectEntity {
 
     @Column(name = "ACTIVE")
     private boolean active;
+
+    @Column(name = "RATE")
+    private BigDecimal rate;
 
 }

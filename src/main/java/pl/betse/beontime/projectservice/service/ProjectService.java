@@ -28,8 +28,6 @@ public class ProjectService {
     @Value("${api-project-exist}")
     private String API_PROJECT_EXIST;
 
-    String tempPrefix = "http://localhost:8088";
-
     public ProjectService(ProjectRepository projectRepository, ClientRepository clientRepository, ProjectMapper projectMapper) {
         this.projectRepository = projectRepository;
         this.clientRepository = clientRepository;
@@ -103,7 +101,8 @@ public class ProjectService {
         projectEntity.setClientEntity(clientEntity);
         projectEntity.setName(projectBo.getName() == null ? projectEntity.getName() : projectBo.getName());
         projectEntity.setComments(projectBo.getComments() == null ? projectEntity.getComments() : projectBo.getComments());
-        projectEntity.setRate(projectBo.getRate() == null ? projectEntity.getRate() : projectBo.getRate());
         projectEntity.setActive(projectBo.isActive());
+        projectEntity.setDepartmentGuid(projectBo.getDepartmentGuid()== null ? projectEntity.getDepartmentGuid() : projectBo.getDepartmentGuid());
+        projectEntity.setRate(projectBo.getRate());
     }
 }
