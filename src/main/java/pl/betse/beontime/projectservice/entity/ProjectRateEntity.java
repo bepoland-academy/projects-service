@@ -23,10 +23,10 @@ public class ProjectRateEntity {
     @JoinColumn(name = "PROJECT_ROLE_ID")
     private ProjectRolesEntity projectRolesEntity;
 
-    @Column(name = "PROJECT_RATE")
+    @Column(name = "RATE")
     private BigDecimal rate;
 
-    @Column(name = "SITE")
+    @Column(name = "ON_SITE")
     private boolean onSite;
 
 

@@ -1,13 +1,11 @@
 package pl.betse.beontime.projectservice.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.hateoas.ResourceSupport;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
