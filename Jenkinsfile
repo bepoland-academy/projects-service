@@ -39,7 +39,7 @@ pipeline {
     }
     stage('Deploy') {
       steps {
-        sh 'docker-compose -H main-server:2376 -f production/docker-compose.yml up -d projects-service'
+        sh 'docker-compose -H main-server:2376 -f production/docker-compose.yml up -d projects-service registry-service'
       }
     }
   }
