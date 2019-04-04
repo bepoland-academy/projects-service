@@ -8,7 +8,6 @@ import pl.betse.beontime.projectservice.exception.RoleAlreadyExistsException;
 import pl.betse.beontime.projectservice.exception.RoleAssignedToRateException;
 import pl.betse.beontime.projectservice.exception.RoleNotFoundException;
 import pl.betse.beontime.projectservice.mapper.RoleMapper;
-import pl.betse.beontime.projectservice.model.RoleBody;
 import pl.betse.beontime.projectservice.repository.RateRepository;
 import pl.betse.beontime.projectservice.repository.RoleRepository;
 
