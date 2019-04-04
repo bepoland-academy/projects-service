@@ -9,5 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface RateRepository extends JpaRepository<ProjectRateEntity, Long> {
-    Optional<ProjectRateEntity> findByProjectRoleEntity (ProjectRoleEntity projectRoleEntity);
+    Optional<ProjectRateEntity> findByProjectRoleEntity(ProjectRoleEntity projectRoleEntity);
 }

@@ -102,7 +102,7 @@ public class ProjectService {
         projectEntity.setName(projectBo.getName() == null ? projectEntity.getName() : projectBo.getName());
         projectEntity.setComments(projectBo.getComments() == null ? projectEntity.getComments() : projectBo.getComments());
         projectEntity.setActive(projectBo.isActive());
-        projectEntity.setDepartmentGuid(projectBo.getDepartmentGuid()== null ? projectEntity.getDepartmentGuid() : projectBo.getDepartmentGuid());
+        projectEntity.setDepartmentGuid(projectBo.getDepartmentGuid() == null ? projectEntity.getDepartmentGuid() : projectBo.getDepartmentGuid());
         projectEntity.setRate(projectBo.getRate());
     }
 }

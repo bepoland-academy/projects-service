@@ -9,13 +9,13 @@ import pl.betse.beontime.projectservice.model.RoleBody;
 @Mapper(componentModel = "spring", uses = {GuidMapper.class})
 public interface RoleMapper {
 
-    @Mapping(source = "roleGuid", target = "roleId" )
+    @Mapping(source = "roleGuid", target = "roleId")
     RoleBo mapRoleEntityToRoleBo(ProjectRoleEntity projectRoleEntity);
 
     @Mapping(source = "roleId", target = "roleGuid", qualifiedByName = "mapGuid")
     ProjectRoleEntity mapRoleBoToRoleEntity(RoleBo roleBo);
 
-    RoleBody mapRoleBoToRoleBody (RoleBo roleBo);
+    RoleBody mapRoleBoToRoleBody(RoleBo roleBo);
 
-    RoleBo mapRoleBodyToRoleBo (RoleBody roleBody);
+    RoleBo mapRoleBodyToRoleBo(RoleBody roleBody);
 }
