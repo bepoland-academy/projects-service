@@ -18,7 +18,7 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     boolean existsByClientEntity(ClientEntity clientEntity);
 
-    boolean existsByRates(String projectGuid);
+//    boolean existsByRates(String projectGuid);
 
 
 }

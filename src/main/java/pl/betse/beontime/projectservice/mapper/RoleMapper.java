@@ -14,7 +14,7 @@ import java.util.List;
 public abstract class RoleMapper {
 
     @Mapping(source = "roleGuid", target = "roleId")
-    @Mapping(source = "projectRateEntities", target = "projects", qualifiedByName = "hasAnyRates")
+//    @Mapping(source = "projectRateEntities", target = "projects", qualifiedByName = "hasAnyRates")
     public abstract RoleBo mapEntityToBo(ProjectRoleEntity projectRoleEntity);
 
     @Mapping(source = "roleId", target = "roleGuid", qualifiedByName = "mapGuid")

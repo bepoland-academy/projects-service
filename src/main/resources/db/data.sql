@@ -26,17 +26,17 @@ insert into PROJECTS_DB.project (project_id, comments, project_guid, project_nam
 (9,'','666536ba-906a-4fc3-85bf-e68e3e88c28c','SALESFORCE Courses for junior developers.','d31182ae-6dca-4153-83b1-fe949e5aade1',3,true,1);
 
 
-insert into PROJECTS_DB.project_rate (project_rate_id, project_id, project_role_id, rates, on_site_RATE) values
-(1,2,3,500.0,21),
-(2,2,2,350.0,32),
-(3,1,4,200.0,43),
-(4,1,1,250.0,54),
-(5,5,5,400.0,65),
-(6,5,5,380.0,76),
-(7,7,2,250.0,87),
-(8,8,2,300.0,98),
-(9,9,2,240.0,89),
-(10,5,5,560.0,78);
+insert into PROJECTS_DB.project_rate (project_rate_id, project_id, project_role_id, rate, on_site_rate) values
+(1,2,3,500.0,21.0),
+(2,2,2,350.0,32.0),
+(3,1,4,200.0,43.0),
+(4,1,1,250.0,54.0),
+(5,5,5,400.0,65.0),
+(6,5,5,380.0,76.0),
+(7,7,2,250.0,87.0),
+(8,8,2,300.0,98.0),
+(9,9,2,240.0,89.0),
+(10,5,5,560.0,78.0);
 
 insert into PROJECTS_DB.project_assignment (project_assignment_id,project_rate_id,user_guid) values
 (1,1,'1e3185a2-ba44-4709-b8de-a1b0a7ad15f5'),

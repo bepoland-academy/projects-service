@@ -1,19 +1,20 @@
 package pl.betse.beontime.projectservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Data
 @Entity
 @Table(name = "PROJECT")
 public class ProjectEntity {
@@ -46,7 +47,7 @@ public class ProjectEntity {
     @Column(name = "OFF_SITE_ONLY")
     private Boolean offSiteOnly = true;
 
-    @OneToMany(mappedBy = "projectEntity", fetch = FetchType.LAZY)
-    private List<ProjectRateEntity> rates;
+    @OneToMany(mappedBy = "projectEntity")
+    private List<ProjectRateEntity> rates = new ArrayList<>();
 
 }

@@ -105,8 +105,10 @@ public class ProjectService {
         projectEntity.setDepartmentGuid(projectBo.getDepartmentGuid() == null ? projectEntity.getDepartmentGuid() : projectBo.getDepartmentGuid());
     }
 
+    //TODO: UNCOMMENT
     public boolean checkIfRateExists(String projectGuid) {
-        return projectRepository.existsByRates(projectGuid);
+//        return projectRepository.existsByRates(projectGuid);
+    return true;
     }
 
 

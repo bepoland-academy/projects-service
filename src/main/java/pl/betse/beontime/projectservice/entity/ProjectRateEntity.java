@@ -1,19 +1,16 @@
 package pl.betse.beontime.projectservice.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
-@AllArgsConstructor
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
 @Entity
 @Table(name = "PROJECT_RATE")
 public class ProjectRateEntity {
@@ -23,22 +20,23 @@ public class ProjectRateEntity {
     @Column(name = "PROJECT_RATE_ID", unique = true, nullable = false)
     private Long id;
 
-    @ManyToOne(optional = false)
+    @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "PROJECT_ID")
     private ProjectEntity projectEntity;
 
+    @JsonIgnore
     @ManyToOne(optional = false)
     @JoinColumn(name = "PROJECT_ROLE_ID")
     private ProjectRoleEntity projectRoleEntity;
 
     @Column(name = "RATE")
-    private BigDecimal rates;
+    private BigDecimal rate;
 
     @Column(name = "ON_SITE_RATE")
     private BigDecimal onSiteRate;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "PROJECT_ASSIGNMENT_ID")
+    @OneToMany(mappedBy = "projectRateEntity", fetch = FetchType.LAZY)
     private List<ProjectAssignmentsEntity> projectAssignmentsEntity = new ArrayList<>();
 
 }

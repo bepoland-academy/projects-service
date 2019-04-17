@@ -58,9 +58,10 @@ public class RoleService {
         ProjectRoleEntity projectRoleEntity = roleRepository.
                 findByRoleGuid(guid).
                 orElseThrow(RoleNotFoundException::new);
-        if (!projectRoleEntity.getProjectRateEntities().isEmpty()) {
-            throw new RoleAssignedToRateException();
-        }
+//TODO: UNCOMMENT
+        //        if (!projectRoleEntity.getProjectRateEntities().isEmpty()) {
+//            throw new RoleAssignedToRateException();
+//        }
         roleRepository.delete(projectRoleEntity);
     }
 

@@ -11,7 +11,7 @@ public abstract class RateMapper {
     public RateBo fromRateEntityToRateBo(ProjectRateEntity projectRateEntity) {
         return RateBo.builder()
                 .roleId(projectRateEntity.getProjectRoleEntity().getId())
-                .rate(projectRateEntity.getRates())
+                .rate(projectRateEntity.getRate())
                 .onSiteRate(projectRateEntity.getOnSiteRate())
                 .build();
     }

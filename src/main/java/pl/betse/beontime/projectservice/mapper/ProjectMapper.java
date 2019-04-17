@@ -14,11 +14,11 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {GuidMapper.class, ClientMapper.class})
 public abstract class ProjectMapper {
 
-    @Mappings({
-            @Mapping(source = "projectRoleEntity.roleGuid",target = "roleId"),
-            @Mapping(source = "projectAssignmentsEntity",target = "consultants", qualifiedByName = "mapTest")
-    })
-    public abstract RateBo fromRateEntityToBo (ProjectRateEntity projectRateEntity);
+//    @Mappings({
+//            @Mapping(source = "projectRoleEntity.roleGuid",target = "roleId"),
+//            @Mapping(source = "projectAssignmentsEntity",target = "consultants", qualifiedByName = "mapTest")
+//    })
+//    public abstract RateBo fromRateEntityToBo (ProjectRateEntity projectRateEntity);
 
     @IterableMapping(elementTargetType = String.class, qualifiedByName = "mapTest")
     protected abstract List<String> mapRolesFromEntity(List<ProjectAssignmentsEntity> roles);
@@ -53,28 +53,28 @@ public abstract class ProjectMapper {
 //    }
 
 
-    public ProjectBo map(ProjectEntity entity){
-        ProjectBo bo = new ProjectBo();
-        bo.setId(entity.getGuid());
+//    public ProjectBo map(ProjectEntity entity){
+//        ProjectBo bo = new ProjectBo();
+//        bo.setId(entity.getGuid());
+//
+//        List<RateBo> rates = new ArrayList<>();
+//        entity.getRates().stream().forEach(rate -> rates.add(mapRate(rate)));
+//        bo.setRates(rates);
+//
+//        return bo;
+//    }
 
-        List<RateBo> rates = new ArrayList<>();
-        entity.getRates().stream().forEach(rate -> rates.add(mapRate(rate)));
-        bo.setRates(rates);
-
-        return bo;
-    }
-
-    private RateBo mapRate(ProjectRateEntity entity){
-        RateBo bo = new RateBo();
-
-        List<String> consultants = new ArrayList<>();
-        entity.getProjectAssignmentsEntity().stream().forEach( assignment -> {
-                consultants.add(assignment.getUserGuid());
-            });
-
-        bo.setConsultants(consultants);
-        return bo;
-    }
+//    private RateBo mapRate(ProjectRateEntity entity){
+//        RateBo bo = new RateBo();
+//
+//        List<String> consultants = new ArrayList<>();
+//        entity.getProjectAssignmentsEntity().stream().forEach( assignment -> {
+//                consultants.add(assignment.getUserGuid());
+//            });
+//
+//        bo.setConsultants(consultants);
+//        return bo;
+//    }
 
     @Mapping(source = "id", target = "guid", qualifiedByName = "mapGuid")
     @Mapping(source = "clientGuid", target = "clientEntity.guid")
