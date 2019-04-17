@@ -8,7 +8,6 @@ import pl.betse.beontime.projectservice.exception.RoleAlreadyExistsException;
 import pl.betse.beontime.projectservice.exception.RoleAssignedToRateException;
 import pl.betse.beontime.projectservice.exception.RoleNotFoundException;
 import pl.betse.beontime.projectservice.mapper.RoleMapper;
-import pl.betse.beontime.projectservice.repository.RateRepository;
 import pl.betse.beontime.projectservice.repository.RoleRepository;
 
 import java.util.List;
@@ -20,24 +19,22 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
     private final RoleMapper roleMapper;
-    private final RateRepository rateRepository;
 
-    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper, RateRepository rateRepository) {
+    public RoleService(RoleRepository roleRepository, RoleMapper roleMapper) {
         this.roleRepository = roleRepository;
         this.roleMapper = roleMapper;
-        this.rateRepository = rateRepository;
     }
 
     public List<RoleBo> allRoles() {
         return roleRepository.findAll()
                 .stream()
-                .map(roleMapper::mapRoleEntityToRoleBo)
+                .map(roleMapper::mapEntityToBo)
                 .collect(Collectors.toList());
     }
 
     public RoleBo findByGuid(String roleGuid) {
         ProjectRoleEntity projectRoleEntity = roleRepository.findByRoleGuid(roleGuid).orElseThrow(RoleNotFoundException::new);
-        return roleMapper.mapRoleEntityToRoleBo(projectRoleEntity);
+        return roleMapper.mapEntityToBo(projectRoleEntity);
     }
 
     public RoleBo addNewRole(RoleBo roleBo) {
@@ -46,7 +43,7 @@ public class RoleService {
             throw new RoleAlreadyExistsException();
         }
         ProjectRoleEntity projectRoleEntity = roleRepository.save(roleMapper.mapRoleBoToRoleEntity(roleBo));
-        return roleMapper.mapRoleEntityToRoleBo(projectRoleEntity);
+        return roleMapper.mapEntityToBo(projectRoleEntity);
     }
 
     public void editRole(String guid, RoleBo roleBo) {
@@ -61,9 +58,10 @@ public class RoleService {
         ProjectRoleEntity projectRoleEntity = roleRepository.
                 findByRoleGuid(guid).
                 orElseThrow(RoleNotFoundException::new);
-        if (rateRepository.findByProjectRoleEntity(projectRoleEntity).isPresent()) {
+        if (!projectRoleEntity.getProjectRateEntities().isEmpty()) {
             throw new RoleAssignedToRateException();
         }
         roleRepository.delete(projectRoleEntity);
     }
+
 }

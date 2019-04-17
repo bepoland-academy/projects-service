@@ -14,12 +14,18 @@ public class VerificationController {
 
     private final ClientService clientService;
 
+
     public VerificationController(ClientService clientService) {
         this.clientService = clientService;
     }
 
-    @GetMapping("/clientExist")
-    public boolean checkIfClientExistsInProject(@RequestParam("guid") String clientGuid){
-        return clientService.checkIfProjectHasAnyClients(clientGuid);
-    }
+//    @GetMapping("/clientExist")
+//    public boolean checkIfClientExistsInProject(@RequestParam("guid") String clientGuid) {
+//        return clientService.checkIfProjectHasAnyClients(clientGuid);
+//    }
+//
+//    @GetMapping("/rateExists")
+//    public boolean checkIfRateExistsInProject(@RequestParam("guid") String clientGuid) {
+//        return clientService.checkIfProjectHasAnyClients(clientGuid);
+//    }
 }

@@ -1,9 +1,17 @@
 package pl.betse.beontime.projectservice.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "PROJECT_ROLE")
@@ -19,4 +27,7 @@ public class ProjectRoleEntity {
 
     @Column(name = "NAME")
     private String name;
+
+    @OneToMany(mappedBy = "projectRoleEntity", fetch = FetchType.EAGER)
+    List<ProjectRateEntity> projectRateEntities = new ArrayList<>();
 }

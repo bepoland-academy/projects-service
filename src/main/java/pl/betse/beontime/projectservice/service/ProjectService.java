@@ -37,7 +37,7 @@ public class ProjectService {
     public List<ProjectBo> allProjects() {
         return projectRepository.findAll()
                 .stream()
-                .map(projectMapper::mapProjectEntityToProjectBo)
+                .map(projectMapper::fromEntityToBo)
                 .collect(Collectors.toList());
     }
 
@@ -45,7 +45,7 @@ public class ProjectService {
         ProjectEntity projectEntity = projectRepository
                 .findByGuid(guid)
                 .orElseThrow(ProjectNotFoundException::new);
-        return projectMapper.mapProjectEntityToProjectBo(projectEntity);
+        return projectMapper.fromEntityToBo(projectEntity);
     }
 
     public List<ProjectBo> getProjectsByDepartmentId(String departmentId) {
@@ -53,7 +53,7 @@ public class ProjectService {
                 .findProjectByDepartmentGuid(departmentId)
                 .orElse(new ArrayList<>());
         return projectEntities.stream()
-                .map(projectMapper::mapProjectEntityToProjectBo)
+                .map(projectMapper::fromEntityToBo)
                 .collect(Collectors.toList());
     }
 
@@ -62,11 +62,11 @@ public class ProjectService {
             throw new ProjectAlreadyExistException();
         }
         ProjectEntity projectEntity = projectMapper.mapProjectBoToProjectEntity(projectBo);
-        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientBo().getClientId())
+        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientGuid())
                 .orElseThrow(ClientNotFoundException::new);
         projectEntity.setClientEntity(clientEntity);
         projectRepository.save(projectEntity);
-        return projectMapper.mapProjectEntityToProjectBo(projectEntity);
+        return projectMapper.fromEntityToBo(projectEntity);
     }
 
     public ProjectBo updateProject(String guid, ProjectBo projectBo) {
@@ -74,7 +74,7 @@ public class ProjectService {
                 .orElseThrow(ProjectNotFoundException::new);
         updateProjectFields(projectBo, projectEntity);
         projectRepository.save(projectEntity);
-        return projectMapper.mapProjectEntityToProjectBo(projectEntity);
+        return projectMapper.fromEntityToBo(projectEntity);
     }
 
     public void deleteProjectByGuid(String guid) {
@@ -84,7 +84,7 @@ public class ProjectService {
         if (!isTimeEntryForProjectExist) {
             ProjectEntity projectEntity = projectRepository.findByGuid(guid)
                     .orElseThrow(ProjectNotFoundException::new);
-            if (projectEntity.isActive()) {
+            if (projectEntity.getActive()) {
                 log.error("Project cannot be deleted while is active");
                 throw new ProjectIsActiveException();
             }
@@ -97,12 +97,17 @@ public class ProjectService {
     }
 
     private void updateProjectFields(ProjectBo projectBo, ProjectEntity projectEntity) {
-        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientBo().getClientId()).orElseThrow(ClientNotFoundException::new);
+        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientGuid()).orElseThrow(ClientNotFoundException::new);
         projectEntity.setClientEntity(clientEntity);
         projectEntity.setName(projectBo.getName() == null ? projectEntity.getName() : projectBo.getName());
         projectEntity.setComments(projectBo.getComments() == null ? projectEntity.getComments() : projectBo.getComments());
-        projectEntity.setActive(projectBo.isActive());
+        projectEntity.setActive(projectBo.getActive());
         projectEntity.setDepartmentGuid(projectBo.getDepartmentGuid() == null ? projectEntity.getDepartmentGuid() : projectBo.getDepartmentGuid());
-        projectEntity.setRate(projectBo.getRate());
     }
+
+    public boolean checkIfRateExists(String projectGuid) {
+        return projectRepository.existsByRates(projectGuid);
+    }
+
+
 }

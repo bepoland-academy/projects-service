@@ -1,0 +1,40 @@
+{
+  "name": "",
+  "comments": "",
+  "client_id": "",
+  "department": "",
+  "offSiteOnly": true,
+  "active": true,
+  "rates": [
+    {
+      "role_id": 2,
+      "rate": 200,
+      "onSiteRate": 150,
+      "consultants": [
+        "consultant_guid",
+        "consultant_guid2"
+      ]
+    },
+    {
+      "role_id": 3,
+      "values": [
+        {
+          "value": 260,
+          "on_site": true
+        },
+        {
+          "value": 700,
+          "on_site": false
+        }
+      ],
+      "consultants": [
+        {
+          "consultant": "consultant_guid"
+        },
+        {
+          "consultant": "consultant_guid"
+        }
+      ]
+    }
+  ]
+}

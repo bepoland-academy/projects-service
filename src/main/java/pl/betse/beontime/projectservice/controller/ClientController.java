@@ -73,12 +73,10 @@ public class ClientController {
     }
 
     private void addLinks(ClientBody clientBody) {
-        clientBody.add(constructLink(clientBody.getClientId()));
-    }
-
-    private Link constructLink(String clientGuid) {
-        URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientGuid)).toUri();
-        return new Link(API_PREFIX + location.getPath()).withSelfRel();
+        clientBody.add(linkTo(methodOn(ClientController.class).getClientByGuid(clientBody.getClientId())).withSelfRel());
+        if(!clientBody.isProject()){
+            clientBody.add(linkTo(methodOn(ClientController.class).deleteClient(clientBody.getClientId())).withRel("DELETE"));
+        }
     }
 
 }

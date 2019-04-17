@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Table(name = "PROJECT_ASSIGNMENT")
 public class ProjectAssignmentsEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PROJECT_ASSIGNMENT_ID")

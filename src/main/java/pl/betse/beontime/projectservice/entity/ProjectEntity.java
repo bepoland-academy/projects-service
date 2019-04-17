@@ -1,12 +1,18 @@
 package pl.betse.beontime.projectservice.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name = "PROJECT")
@@ -35,9 +41,12 @@ public class ProjectEntity {
     private String departmentGuid;
 
     @Column(name = "ACTIVE")
-    private boolean active;
+    private Boolean active;
 
-    @Column(name = "RATE")
-    private BigDecimal rate;
+    @Column(name = "OFF_SITE_ONLY")
+    private Boolean offSiteOnly = true;
+
+    @OneToMany(mappedBy = "projectEntity", fetch = FetchType.LAZY)
+    private List<ProjectRateEntity> rates;
 
 }

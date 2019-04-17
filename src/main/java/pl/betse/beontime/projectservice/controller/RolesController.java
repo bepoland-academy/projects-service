@@ -1,7 +1,6 @@
 package pl.betse.beontime.projectservice.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import pl.betse.beontime.projectservice.model.RoleBody;
 import pl.betse.beontime.projectservice.service.RoleService;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +43,7 @@ public class RolesController {
     }
 
     @GetMapping("/{guid}")
-    public ResponseEntity<Resource<RoleBody>> getRoleByGuid(@PathVariable("guid")String roleGuid){
+    public ResponseEntity<Resource<RoleBody>> getRoleByGuid(@PathVariable("guid") String roleGuid) {
         RoleBody roleBody = roleMapper.mapRoleBoToRoleBody(roleService.findByGuid(roleGuid));
         addLinks(roleBody);
         return ResponseEntity.ok(new Resource<>(roleBody));
@@ -69,15 +67,11 @@ public class RolesController {
         return ResponseEntity.ok().build();
     }
 
-
     private void addLinks(RoleBody roleBody) {
-        Link link = constructLink(roleBody.getRoleId());
-        roleBody.add(link);
-    }
-
-    private Link constructLink(String roleGuid) {
-        URI location = linkTo(methodOn(RolesController.class).deleteRole(roleGuid)).toUri();
-        return new Link(API_PREFIX + location.getPath()).withSelfRel();
+        roleBody.add(linkTo(methodOn(RolesController.class).getRoleByGuid(roleBody.getRoleId())).withSelfRel());
+        if (!roleBody.isProjects()) {
+            roleBody.add(linkTo(methodOn(RolesController.class).deleteRole(roleBody.getRoleId())).withRel("DELETE"));
+        }
     }
 
 }

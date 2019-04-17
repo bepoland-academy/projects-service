@@ -71,10 +71,10 @@ public class ClientService {
         clientRepository.delete(clientEntity);
     }
 
-    public boolean checkIfProjectHasAnyClients(String guid){
-        ClientEntity clientEntity = clientRepository.findByGuid(guid).
-                orElseThrow(ClientNotFoundException::new);
-        return projectRepository.existsByClientEntity(clientEntity);
-    }
+//    public boolean checkIfProjectHasAnyClients(String guid){
+//        ClientEntity clientEntity = clientRepository.findByGuid(guid).
+//                orElseThrow(ClientNotFoundException::new);
+//        return projectRepository.existsByClientEntity(clientEntity);
+//    }
 
 }
