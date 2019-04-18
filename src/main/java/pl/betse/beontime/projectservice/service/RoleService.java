@@ -28,13 +28,13 @@ public class RoleService {
     public List<RoleBo> allRoles() {
         return roleRepository.findAll()
                 .stream()
-                .map(roleMapper::mapEntityToBo)
+                .map(roleMapper::fromEntityToBo)
                 .collect(Collectors.toList());
     }
 
     public RoleBo findByGuid(String roleGuid) {
         ProjectRoleEntity projectRoleEntity = roleRepository.findByRoleGuid(roleGuid).orElseThrow(RoleNotFoundException::new);
-        return roleMapper.mapEntityToBo(projectRoleEntity);
+        return roleMapper.fromEntityToBo(projectRoleEntity);
     }
 
     public RoleBo addNewRole(RoleBo roleBo) {
@@ -42,8 +42,8 @@ public class RoleService {
             log.error("ROLE IS ALREADY EXISTS");
             throw new RoleAlreadyExistsException();
         }
-        ProjectRoleEntity projectRoleEntity = roleRepository.save(roleMapper.mapRoleBoToRoleEntity(roleBo));
-        return roleMapper.mapEntityToBo(projectRoleEntity);
+        ProjectRoleEntity projectRoleEntity = roleRepository.save(roleMapper.fromBoToEntity(roleBo));
+        return roleMapper.fromEntityToBo(projectRoleEntity);
     }
 
     public void editRole(String guid, RoleBo roleBo) {
@@ -58,10 +58,9 @@ public class RoleService {
         ProjectRoleEntity projectRoleEntity = roleRepository.
                 findByRoleGuid(guid).
                 orElseThrow(RoleNotFoundException::new);
-//TODO: UNCOMMENT
-        //        if (!projectRoleEntity.getProjectRateEntities().isEmpty()) {
-//            throw new RoleAssignedToRateException();
-//        }
+        if (!projectRoleEntity.getProjectRateEntities().isEmpty()) {
+            throw new RoleAssignedToRateException();
+        }
         roleRepository.delete(projectRoleEntity);
     }
 

@@ -36,7 +36,7 @@ public class RolesController {
     public ResponseEntity<Resources<RoleBody>> getListOfAllRoles() {
         List<RoleBody> roles = roleService.allRoles()
                 .stream()
-                .map(roleMapper::mapRoleBoToRoleBody)
+                .map(roleMapper::fromBoToBody)
                 .collect(Collectors.toList());
         roles.forEach(this::addLinks);
         return ResponseEntity.ok(new Resources<>(roles));
@@ -44,20 +44,20 @@ public class RolesController {
 
     @GetMapping("/{guid}")
     public ResponseEntity<Resource<RoleBody>> getRoleByGuid(@PathVariable("guid") String roleGuid) {
-        RoleBody roleBody = roleMapper.mapRoleBoToRoleBody(roleService.findByGuid(roleGuid));
+        RoleBody roleBody = roleMapper.fromBoToBody(roleService.findByGuid(roleGuid));
         addLinks(roleBody);
         return ResponseEntity.ok(new Resource<>(roleBody));
     }
 
     @PostMapping
     public ResponseEntity createRole(@RequestBody @Valid RoleBody roleBody) {
-        RoleBo roleBo = roleService.addNewRole(roleMapper.mapRoleBodyToRoleBo(roleBody));
+        RoleBo roleBo = roleService.addNewRole(roleMapper.fromBodyToBo(roleBody));
         return ResponseEntity.ok(roleBo);
     }
 
     @PutMapping("/{guid}")
     public ResponseEntity updateRole(@PathVariable("guid") String guid, @RequestBody @Valid RoleBody roleBody) {
-        roleService.editRole(guid, roleMapper.mapRoleBodyToRoleBo(roleBody));
+        roleService.editRole(guid, roleMapper.fromBodyToBo(roleBody));
         return ResponseEntity.ok().build();
     }
 

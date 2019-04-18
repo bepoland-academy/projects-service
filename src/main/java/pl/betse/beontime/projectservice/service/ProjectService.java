@@ -6,13 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import pl.betse.beontime.projectservice.bo.ProjectBo;
-import pl.betse.beontime.projectservice.entity.ClientEntity;
-import pl.betse.beontime.projectservice.entity.ProjectEntity;
+import pl.betse.beontime.projectservice.bo.RateBo;
+import pl.betse.beontime.projectservice.entity.*;
 import pl.betse.beontime.projectservice.exception.*;
 import pl.betse.beontime.projectservice.mapper.ProjectMapper;
-import pl.betse.beontime.projectservice.repository.ClientRepository;
-import pl.betse.beontime.projectservice.repository.ProjectRepository;
+import pl.betse.beontime.projectservice.mapper.RateMapper;
+import pl.betse.beontime.projectservice.repository.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,14 +25,28 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ClientRepository clientRepository;
     private final ProjectMapper projectMapper;
+    private final RateMapper rateMapper;
+    private final RateRepository rateRepository;
+    private final RoleRepository roleRepository;
+    private final AssignmentRepository assignmentRepository;
 
     @Value("${api-project-exist}")
     private String API_PROJECT_EXIST;
 
-    public ProjectService(ProjectRepository projectRepository, ClientRepository clientRepository, ProjectMapper projectMapper) {
+    public ProjectService(ProjectRepository projectRepository,
+                          ClientRepository clientRepository,
+                          ProjectMapper projectMapper,
+                          RateMapper rateMapper,
+                          RateRepository rateRepository,
+                          RoleRepository roleRepository,
+                          AssignmentRepository assignmentRepository) {
         this.projectRepository = projectRepository;
         this.clientRepository = clientRepository;
         this.projectMapper = projectMapper;
+        this.rateMapper = rateMapper;
+        this.rateRepository = rateRepository;
+        this.roleRepository = roleRepository;
+        this.assignmentRepository = assignmentRepository;
     }
 
     public List<ProjectBo> allProjects() {
@@ -58,10 +73,10 @@ public class ProjectService {
     }
 
     public ProjectBo addNewProject(ProjectBo projectBo) {
-        if (projectRepository.findByGuid(projectBo.getId()).isPresent()) {
+        if (projectRepository.findByGuid(projectBo.getProjectId()).isPresent()) {
             throw new ProjectAlreadyExistException();
         }
-        ProjectEntity projectEntity = projectMapper.mapProjectBoToProjectEntity(projectBo);
+        ProjectEntity projectEntity = projectMapper.fromBoToEntity(projectBo);
         ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientGuid())
                 .orElseThrow(ClientNotFoundException::new);
         projectEntity.setClientEntity(clientEntity);
@@ -103,12 +118,65 @@ public class ProjectService {
         projectEntity.setComments(projectBo.getComments() == null ? projectEntity.getComments() : projectBo.getComments());
         projectEntity.setActive(projectBo.getActive());
         projectEntity.setDepartmentGuid(projectBo.getDepartmentGuid() == null ? projectEntity.getDepartmentGuid() : projectBo.getDepartmentGuid());
+        projectEntity.setOffSiteOnly(projectBo.getOffSiteOnly());
+
+        if (!projectBo.getRates().isEmpty()) {
+
+
+            for (RateBo rate : projectBo.getRates()) {
+
+                ProjectRoleEntity projectRoleEntity = roleRepository.getOne(rate.getRoleId());
+
+                ProjectRateEntity projectRateEntity = rateRepository.findByProjectRoleEntityAndProjectEntity_Guid(projectRoleEntity, projectEntity.getGuid());
+
+                if (projectRateEntity == null) {
+                    projectRateEntity = new ProjectRateEntity();
+                }
+
+                projectRateEntity.setRate(rate.getRate());
+                if (projectEntity.getOffSiteOnly()) {
+                    projectRateEntity.setOnSiteRate(BigDecimal.ZERO);
+                } else {
+                    projectRateEntity.setOnSiteRate(rate.getOnSiteRate());
+                }
+
+                List<ProjectAssignmentsEntity> projectAssignmentsEntityList = new ArrayList<>();
+
+                projectRateEntity.setProjectAssignmentsEntity(projectAssignmentsEntityList);
+
+                projectRateEntity.setProjectEntity(projectEntity);
+
+                projectRateEntity.setProjectRoleEntity(projectRoleEntity);
+
+                rateRepository.save(projectRateEntity);
+
+                roleRepository.save(projectRoleEntity);
+
+                for (String consultantGuid : rate.getConsultants()) {
+
+                    if (!assignmentRepository.existsByUserGuidAndProjectRateEntity(consultantGuid, projectRateEntity)) {
+                        ProjectAssignmentsEntity projectAssignmentsEntity = new ProjectAssignmentsEntity();
+                        projectAssignmentsEntity.setUserGuid(consultantGuid);
+                        projectAssignmentsEntity.setProjectRateEntity(projectRateEntity);
+                        projectAssignmentsEntityList.add(projectAssignmentsEntity);
+                        assignmentRepository.save(projectAssignmentsEntity);
+                    }
+
+
+                }
+
+
+
+
+            }
+
+
+        }
+
     }
 
-    //TODO: UNCOMMENT
     public boolean checkIfRateExists(String projectGuid) {
-//        return projectRepository.existsByRates(projectGuid);
-    return true;
+        return projectRepository.existsByRates(projectGuid);
     }
 
 

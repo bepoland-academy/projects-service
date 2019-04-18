@@ -7,7 +7,6 @@ import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.betse.beontime.projectservice.bo.ProjectBo;
-import pl.betse.beontime.projectservice.bo.RateBo;
 import pl.betse.beontime.projectservice.exception.ProjectNoClientException;
 import pl.betse.beontime.projectservice.mapper.ProjectMapper;
 import pl.betse.beontime.projectservice.model.ProjectBody;
@@ -20,7 +19,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.URI;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -71,7 +69,7 @@ public class ProjectController {
             throw new ProjectNoClientException();
         }
         ProjectBo projectBo = projectService.addNewProject(projectMapper.mapProjectBodyToProjectBo(projectBody));
-        URI location = linkTo(methodOn(ProjectController.class).getProjectByGuid(projectBo.getId())).toUri();
+        URI location = linkTo(methodOn(ProjectController.class).getProjectByGuid(projectBo.getProjectId())).toUri();
         return ResponseEntity.created(new URI(API_PREFIX + location.getPath())).build();
     }
 
@@ -91,8 +89,8 @@ public class ProjectController {
     }
 
     @GetMapping("/{guid}/rates")
-    public ResponseEntity<Resources<RateBody>> getRatesForProject (@PathVariable String guid){
-       return ResponseEntity.ok().build();
+    public ResponseEntity<Resources<RateBody>> getRatesForProject(@PathVariable String guid) {
+        return ResponseEntity.ok().build();
     }
 
 //    @PostMapping
