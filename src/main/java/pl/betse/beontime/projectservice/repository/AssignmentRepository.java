@@ -7,8 +7,5 @@ import pl.betse.beontime.projectservice.entity.ProjectRateEntity;
 public interface AssignmentRepository extends JpaRepository<ProjectAssignmentsEntity, Long> {
 
 
-    ProjectAssignmentsEntity findByUserGuidAndProjectRateEntity(String guid, ProjectRateEntity projectRateEntity);
-
-
     boolean existsByUserGuidAndProjectRateEntity(String guid, ProjectRateEntity projectRateEntity);
 }

@@ -12,5 +12,4 @@ public interface RoleRepository extends JpaRepository<ProjectRoleEntity, Long> {
 
     Optional<ProjectRoleEntity> findByRoleGuid(String guid);
 
-
 }

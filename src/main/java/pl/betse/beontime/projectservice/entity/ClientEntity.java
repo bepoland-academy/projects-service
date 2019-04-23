@@ -1,6 +1,5 @@
 package pl.betse.beontime.projectservice.entity;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

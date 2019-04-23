@@ -30,5 +30,4 @@ public class ProjectRoleEntity {
     @OneToMany(mappedBy = "projectRoleEntity", fetch = FetchType.LAZY)
     List<ProjectRateEntity> projectRateEntities = new ArrayList<>();
 
-
 }

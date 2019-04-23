@@ -63,6 +63,15 @@ public class ProjectController {
         return ResponseEntity.ok(new Resources<>(projects));
     }
 
+    @GetMapping("/client")
+    public ResponseEntity<Resources<ProjectBody>> getProjectByClient(@RequestParam(name = "client") String clientGuid) {
+        List<ProjectBody> projectBody = projectService.findByClient(clientGuid).stream()
+                .map(projectMapper::mapProjectBoToProjectBody)
+                .collect(Collectors.toList());
+        projectBody.forEach(this::addLinks);
+        return ResponseEntity.ok(new Resources<>(projectBody));
+    }
+
     @PostMapping
     public ResponseEntity createProject(@RequestBody @Valid ProjectBody projectBody) throws URISyntaxException {
         if (projectBody.getClientGuid() == null) {
@@ -93,10 +102,6 @@ public class ProjectController {
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping
-//    public ResponseEntity createRate(@RequestBody RateBody rateBody){
-//        RateBo rateBo = projectService.addNewRate
-//    }
 
     private void addLinks(ProjectBody projectBody) {
         Link link = constructLink(projectBody.getProjectId());

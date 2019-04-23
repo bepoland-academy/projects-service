@@ -73,7 +73,7 @@ public class ClientController {
 
     private void addLinks(ClientBody clientBody) {
         clientBody.add(linkTo(methodOn(ClientController.class).getClientByGuid(clientBody.getClientId())).withSelfRel());
-        if(!clientBody.isProject()){
+        if (!clientBody.isProject()) {
             clientBody.add(linkTo(methodOn(ClientController.class).deleteClient(clientBody.getClientId())).withRel("DELETE"));
         }
     }

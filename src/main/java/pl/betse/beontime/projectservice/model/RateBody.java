@@ -1,14 +1,17 @@
 package pl.betse.beontime.projectservice.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.ResourceSupport;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class RateBody {
+@EqualsAndHashCode(callSuper = false)
+public class RateBody extends ResourceSupport {
 
     private Long roleId;
     private BigDecimal rate;

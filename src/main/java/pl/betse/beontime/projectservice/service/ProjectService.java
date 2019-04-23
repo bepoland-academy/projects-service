@@ -63,6 +63,13 @@ public class ProjectService {
         return projectMapper.fromEntityToBo(projectEntity);
     }
 
+    public List<ProjectBo> findByClient(String clientGuid) {
+        ClientEntity clientEntity = clientRepository.findByGuid(clientGuid).orElseThrow(ClientNotFoundException::new);
+        return projectRepository.findByClientEntity(clientEntity).stream()
+                .map(projectMapper::fromEntityToBo)
+                .collect(Collectors.toList());
+    }
+
     public List<ProjectBo> getProjectsByDepartmentId(String departmentId) {
         List<ProjectEntity> projectEntities = projectRepository
                 .findProjectByDepartmentGuid(departmentId)
@@ -164,8 +171,6 @@ public class ProjectService {
 
 
                 }
-
-
 
 
             }

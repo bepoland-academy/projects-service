@@ -13,8 +13,5 @@ public interface RateRepository extends JpaRepository<ProjectRateEntity, Long> {
 
     List<ProjectRateEntity> findByProjectEntity(ProjectEntity projectEntity);
 
-    ProjectRateEntity findByProjectRoleEntity(ProjectRoleEntity projectRoleEntity);
-
-
     ProjectRateEntity findByProjectRoleEntityAndProjectEntity_Guid(ProjectRoleEntity projectRoleEntity, String projectGuid);
 }
