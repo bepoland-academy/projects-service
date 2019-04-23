@@ -14,5 +14,10 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
 
     Optional<List<ProjectEntity>> findProjectByDepartmentGuid(String departmentGuid);
 
+    List<ProjectEntity> findByClientEntity(ClientEntity clientEntity);
+
     boolean existsByClientEntity(ClientEntity clientEntity);
+
+    boolean existsByRates(String projectGuid);
+
 }

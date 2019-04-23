@@ -1,0 +1,52 @@
+{
+  "name": "",
+  "comment": "",
+  "client_id": "",
+  "department_guid": "",
+  "onsite_offsite" : false,
+  "active": true,
+  "rates": [
+    {
+      "role_id": 2,
+      "values": [
+        {
+          "value": 150,
+          "on_site": true
+        },
+        {
+          "value": 120,
+          "off_site": false
+        }
+      ],
+      "consultants": [
+        {
+          "consultant": "consultant_guid"
+        },
+        {
+          "consultant": "consultant_guid"
+        }
+      ]
+    },
+    {
+      "role_id": 3,
+      "values": [
+        {
+          "value": 260,
+          "on_site": true
+        },
+        {
+          "value": 700,
+          "on_site": false
+        }
+      ],
+      "consultants": [
+        {
+          "consultant": "consultant_guid"
+        },
+        {
+          "consultant": "consultant_guid"
+        }
+      ]
+    }
+  ]
+}

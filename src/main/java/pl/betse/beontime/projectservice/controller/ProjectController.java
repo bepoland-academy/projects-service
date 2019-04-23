@@ -10,6 +10,7 @@ import pl.betse.beontime.projectservice.bo.ProjectBo;
 import pl.betse.beontime.projectservice.exception.ProjectNoClientException;
 import pl.betse.beontime.projectservice.mapper.ProjectMapper;
 import pl.betse.beontime.projectservice.model.ProjectBody;
+import pl.betse.beontime.projectservice.model.RateBody;
 import pl.betse.beontime.projectservice.service.ProjectService;
 
 import javax.validation.Valid;
@@ -62,19 +63,28 @@ public class ProjectController {
         return ResponseEntity.ok(new Resources<>(projects));
     }
 
+    @GetMapping("/client")
+    public ResponseEntity<Resources<ProjectBody>> getProjectByClient(@RequestParam(name = "client") String clientGuid) {
+        List<ProjectBody> projectBody = projectService.findByClient(clientGuid).stream()
+                .map(projectMapper::mapProjectBoToProjectBody)
+                .collect(Collectors.toList());
+        projectBody.forEach(this::addLinks);
+        return ResponseEntity.ok(new Resources<>(projectBody));
+    }
+
     @PostMapping
     public ResponseEntity createProject(@RequestBody @Valid ProjectBody projectBody) throws URISyntaxException {
-        if (projectBody.getClient() == null) {
+        if (projectBody.getClientGuid() == null) {
             throw new ProjectNoClientException();
         }
         ProjectBo projectBo = projectService.addNewProject(projectMapper.mapProjectBodyToProjectBo(projectBody));
-        URI location = linkTo(methodOn(ProjectController.class).getProjectByGuid(projectBo.getId())).toUri();
+        URI location = linkTo(methodOn(ProjectController.class).getProjectByGuid(projectBo.getProjectId())).toUri();
         return ResponseEntity.created(new URI(API_PREFIX + location.getPath())).build();
     }
 
     @PutMapping(path = "/{guid}")
     public ResponseEntity updateProject(@PathVariable("guid") String projectGuid, @RequestBody ProjectBody projectBody) {
-        if (projectBody.getClient() == null) {
+        if (projectBody.getClientGuid() == null) {
             throw new ProjectNoClientException();
         }
         projectMapper.mapProjectBoToProjectBody(projectService.updateProject(projectGuid, projectMapper.mapProjectBodyToProjectBo(projectBody)));
@@ -86,6 +96,12 @@ public class ProjectController {
         projectService.deleteProjectByGuid(guid);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/{guid}/rates")
+    public ResponseEntity<Resources<RateBody>> getRatesForProject(@PathVariable String guid) {
+        return ResponseEntity.ok().build();
+    }
+
 
     private void addLinks(ProjectBody projectBody) {
         Link link = constructLink(projectBody.getProjectId());

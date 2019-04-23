@@ -31,7 +31,7 @@ public class ClientService {
     public List<ClientBo> allClients() {
         return clientRepository.findAll()
                 .stream()
-                .map(clientMapper::mapClientEntityToClientBo)
+                .map(clientMapper::fromEntityToBo)
                 .collect(Collectors.toList());
     }
 
@@ -39,7 +39,7 @@ public class ClientService {
         ClientEntity clientEntity = clientRepository
                 .findByGuid(guid)
                 .orElseThrow(ClientNotFoundException::new);
-        return clientMapper.mapClientEntityToClientBo(clientEntity);
+        return clientMapper.fromEntityToBo(clientEntity);
     }
 
     public ClientBo addNewClient(ClientBo clientBo) {
@@ -47,8 +47,8 @@ public class ClientService {
             throw new ClientAlreadyExistException();
         }
         ClientEntity clientEntity = clientRepository
-                .save(clientMapper.mapClientBoToClientEntity(clientBo));
-        return clientMapper.mapClientEntityToClientBo(clientEntity);
+                .save(clientMapper.fromBoToEntity(clientBo));
+        return clientMapper.fromEntityToBo(clientEntity);
     }
 
     public ClientBo updateClient(String guid, ClientBo clientBo) {
@@ -57,7 +57,7 @@ public class ClientService {
                 .orElseThrow(ClientNotFoundException::new);
         clientEntity.setName(clientBo.getName() == null ? clientEntity.getName() : clientBo.getName());
         clientRepository.save(clientEntity);
-        return clientMapper.mapClientEntityToClientBo(clientEntity);
+        return clientMapper.fromEntityToBo(clientEntity);
     }
 
     public void deleteClient(String guid) {
@@ -71,7 +71,7 @@ public class ClientService {
         clientRepository.delete(clientEntity);
     }
 
-    public boolean checkIfProjectHasAnyClients(String guid){
+    public boolean checkIfProjectHasAnyClients(String guid) {
         ClientEntity clientEntity = clientRepository.findByGuid(guid).
                 orElseThrow(ClientNotFoundException::new);
         return projectRepository.existsByClientEntity(clientEntity);

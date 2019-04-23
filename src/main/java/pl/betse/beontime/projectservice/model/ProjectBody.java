@@ -8,7 +8,7 @@ import org.springframework.hateoas.ResourceSupport;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -20,10 +20,10 @@ public class ProjectBody extends ResourceSupport {
     @NotEmpty(message = "Name can't be empty")
     private String name;
     @Length(max = 500, message = "Comment should contains max. 500 characters")
+    private String clientGuid;
     private String comments;
-    private String department;
-    private ClientBody client;
-    private boolean active;
-    @NotNull(message = "Rate can't be null")
-    private BigDecimal rate;
+    private String departmentGuid;
+    private Boolean offSiteOnly;
+    private Boolean active;
+    private List<RateBody> rates;
 }

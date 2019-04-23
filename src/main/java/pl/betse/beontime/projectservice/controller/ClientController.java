@@ -1,7 +1,6 @@
 package pl.betse.beontime.projectservice.controller;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.ResponseEntity;
@@ -39,7 +38,7 @@ public class ClientController {
     @GetMapping
     public ResponseEntity<Resources<ClientBody>> getListOfAllClients() {
         List<ClientBody> clients = clientService.allClients().stream()
-                .map(clientMapper::mapClientBoToClientBody)
+                .map(clientMapper::fromBoToBody)
                 .collect(Collectors.toList());
         clients.forEach(this::addLinks);
         return ResponseEntity.ok(new Resources<>(clients));
@@ -48,21 +47,21 @@ public class ClientController {
     @GetMapping("/{guid}")
     public ResponseEntity getClientByGuid(@PathVariable String guid) {
         ClientBo clientBo = clientService.getByGuid(guid);
-        ClientBody clientBody = clientMapper.mapClientBoToClientBody(clientBo);
+        ClientBody clientBody = clientMapper.fromBoToBody(clientBo);
         addLinks(clientBody);
         return ResponseEntity.ok(new Resource<>(clientBody));
     }
 
     @PostMapping
     public ResponseEntity createClient(@RequestBody @Valid ClientBody clientBody) throws URISyntaxException {
-        ClientBo clientBo = clientService.addNewClient(clientMapper.mapClientBodyToClientBo(clientBody));
+        ClientBo clientBo = clientService.addNewClient(clientMapper.fromBodyToBo(clientBody));
         URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientBo.getClientId())).toUri();
         return ResponseEntity.created(new URI(API_PREFIX + location.getPath())).build();
     }
 
     @PutMapping("/{guid}")
     public ResponseEntity updateClient(@PathVariable("guid") String guid, @RequestBody ClientBody clientBody) {
-        clientMapper.mapClientBoToClientBody(clientService.updateClient(guid, clientMapper.mapClientBodyToClientBo(clientBody)));
+        clientMapper.fromBoToBody(clientService.updateClient(guid, clientMapper.fromBodyToBo(clientBody)));
         return ResponseEntity.ok().build();
     }
 
@@ -73,12 +72,10 @@ public class ClientController {
     }
 
     private void addLinks(ClientBody clientBody) {
-        clientBody.add(constructLink(clientBody.getClientId()));
-    }
-
-    private Link constructLink(String clientGuid) {
-        URI location = linkTo(methodOn(ClientController.class).getClientByGuid(clientGuid)).toUri();
-        return new Link(API_PREFIX + location.getPath()).withSelfRel();
+        clientBody.add(linkTo(methodOn(ClientController.class).getClientByGuid(clientBody.getClientId())).withSelfRel());
+        if (!clientBody.isProject()) {
+            clientBody.add(linkTo(methodOn(ClientController.class).deleteClient(clientBody.getClientId())).withRel("DELETE"));
+        }
     }
 
 }

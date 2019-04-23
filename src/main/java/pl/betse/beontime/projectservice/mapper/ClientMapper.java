@@ -10,15 +10,15 @@ import pl.betse.beontime.projectservice.model.ClientBody;
 public interface ClientMapper {
 
     @Mapping(source = "guid", target = "clientId")
-    ClientBo mapClientEntityToClientBo(ClientEntity clientEntity);
+    ClientBo fromEntityToBo(ClientEntity clientEntity);
 
     @Mapping(source = "clientId", target = "guid", qualifiedByName = "mapGuid")
-    ClientEntity mapClientBoToClientEntity(ClientBo clientBo);
+    ClientEntity fromBoToEntity(ClientBo clientBo);
 
     @Mapping(source = "clientId", target = "clientId")
-    ClientBody mapClientBoToClientBody(ClientBo clientBo);
+    ClientBody fromBoToBody(ClientBo clientBo);
 
     @Mapping(source = "clientId", target = "clientId")
-    ClientBo mapClientBodyToClientBo(ClientBody clientBody);
+    ClientBo fromBodyToBo(ClientBody clientBody);
 
 }

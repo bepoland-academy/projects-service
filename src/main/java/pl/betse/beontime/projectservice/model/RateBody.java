@@ -1,21 +1,21 @@
-package pl.betse.beontime.projectservice.bo;
+package pl.betse.beontime.projectservice.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.ResourceSupport;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-@Builder
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
-public class RateBo {
+@EqualsAndHashCode(callSuper = false)
+public class RateBody extends ResourceSupport {
 
     private Long roleId;
     private BigDecimal rate;
     private BigDecimal onSiteRate;
     private List<String> consultants;
+
 }
