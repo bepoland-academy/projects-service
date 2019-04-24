@@ -14,12 +14,12 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = {RoleMapper.class, ProjectMapper.class})
 public abstract class RateMapper {
 
-    @Mapping(source = "projectRoleEntity.id", target = "roleId")
+    @Mapping(source = "projectRoleEntity.roleGuid", target = "roleId")
     @Mapping(source = "projectAssignmentsEntity", target = "consultants")
     public abstract RateBo fromEntityToBo(ProjectRateEntity projectRateEntity);
 
 
-    @Mapping(source = "roleId", target = "projectRoleEntity.id")
+    @Mapping(source = "roleId", target = "projectRoleEntity.roleGuid")
     @Mapping(source = "consultants", target = "projectAssignmentsEntity")
     public abstract ProjectRateEntity fromBoToEntiy(RateBo rateBo);
 

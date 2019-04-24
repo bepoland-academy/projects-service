@@ -13,7 +13,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class RateBody extends ResourceSupport {
 
-    private Long roleId;
+    private String roleId;
     private BigDecimal rate;
     private BigDecimal onSiteRate;
     private List<String> consultants;
