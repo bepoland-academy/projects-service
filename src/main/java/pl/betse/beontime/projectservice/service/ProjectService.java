@@ -132,7 +132,8 @@ public class ProjectService {
 
             for (RateBo rate : projectBo.getRates()) {
 
-                ProjectRoleEntity projectRoleEntity = roleRepository.getOne(rate.getRoleId());
+                // TODO: Get role by GUID not ID -> new method in repository
+                ProjectRoleEntity projectRoleEntity = roleRepository.findByRoleGuid(rate.getRoleId()).orElseThrow(RoleNotFoundException::new);
 
                 ProjectRateEntity projectRateEntity = rateRepository.findByProjectRoleEntityAndProjectEntity_Guid(projectRoleEntity, projectEntity.getGuid());
 

@@ -37,6 +37,7 @@ public class RoleService {
         return roleMapper.fromEntityToBo(projectRoleEntity);
     }
 
+
     public RoleBo addNewRole(RoleBo roleBo) {
         if (roleRepository.findByName(roleBo.getName()).isPresent()) {
             log.error("ROLE IS ALREADY EXISTS");

@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RateBo {
 
-    private Long roleId;
+    private String roleId;
     private BigDecimal rate;
     private BigDecimal onSiteRate;
     private List<String> consultants;
