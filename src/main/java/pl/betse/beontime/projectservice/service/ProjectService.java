@@ -84,11 +84,25 @@ public class ProjectService {
             throw new ProjectAlreadyExistException();
         }
         ProjectEntity projectEntity = projectMapper.fromBoToEntity(projectBo);
+
         ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientGuid())
                 .orElseThrow(ClientNotFoundException::new);
         projectEntity.setClientEntity(clientEntity);
-        projectRepository.save(projectEntity);
+        ProjectEntity createdProjectEntity = projectRepository.save(projectEntity);
+
+        createdProjectEntity
+                .getRates()
+                .stream()
+                .forEach(rateEntity -> {
+                    rateEntity.setProjectEntity(createdProjectEntity);
+                    ProjectRoleEntity projectRoleEntity=
+                            roleRepository.findByRoleGuid(rateEntity.getProjectRoleEntity().getRoleGuid()).get();
+                    rateEntity.setProjectRoleEntity(projectRoleEntity);
+                    rateRepository.save(rateEntity);
+                });
+
         return projectMapper.fromEntityToBo(projectEntity);
+
     }
 
     public ProjectBo updateProject(String guid, ProjectBo projectBo) {
@@ -179,10 +193,6 @@ public class ProjectService {
 
         }
 
-    }
-
-    public boolean checkIfRateExists(String projectGuid) {
-        return projectRepository.existsByRates(projectGuid);
     }
 
 
