@@ -95,10 +95,18 @@ public class ProjectService {
                 .stream()
                 .forEach(rateEntity -> {
                     rateEntity.setProjectEntity(createdProjectEntity);
-                    ProjectRoleEntity projectRoleEntity=
+                    ProjectRoleEntity projectRoleEntity =
                             roleRepository.findByRoleGuid(rateEntity.getProjectRoleEntity().getRoleGuid()).get();
                     rateEntity.setProjectRoleEntity(projectRoleEntity);
-                    rateRepository.save(rateEntity);
+
+                    ProjectRateEntity createdProjectRateEntity = rateRepository.save(rateEntity);
+
+                    createdProjectRateEntity.getProjectAssignmentsEntity().stream().forEach(
+                            assignment -> {
+                                assignment.setProjectRateEntity(createdProjectRateEntity);
+                                assignmentRepository.save(assignment);
+                            }
+                    );
                 });
 
         return projectMapper.fromEntityToBo(projectEntity);
@@ -108,9 +116,50 @@ public class ProjectService {
     public ProjectBo updateProject(String guid, ProjectBo projectBo) {
         ProjectEntity projectEntity = projectRepository.findByGuid(guid)
                 .orElseThrow(ProjectNotFoundException::new);
-        updateProjectFields(projectBo, projectEntity);
+
+        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientGuid())
+                .orElseThrow(ClientNotFoundException::new);
+        projectEntity.setClientEntity(clientEntity);
+
+        for (ProjectRateEntity projectRateEntity : projectEntity.getRates()) {
+
+            for (ProjectAssignmentsEntity assignmentsEntity : projectRateEntity.getProjectAssignmentsEntity()) {
+                assignmentRepository.delete(assignmentsEntity);
+            }
+            rateRepository.delete(projectRateEntity);
+        }
+
+        ////
+        ProjectEntity projectToBeUpdatedEntity = projectMapper.fromBoToEntity(projectBo);
+        projectToBeUpdatedEntity.setId(projectEntity.getId());
+        projectToBeUpdatedEntity
+                .getRates()
+                .stream()
+                .forEach(rateEntity -> {
+                    rateEntity.setProjectEntity(projectEntity);
+                    ProjectRoleEntity projectRoleEntity =
+                            roleRepository.findByRoleGuid(rateEntity.getProjectRoleEntity().getRoleGuid()).get();
+                    rateEntity.setProjectRoleEntity(projectRoleEntity);
+
+                    ProjectRateEntity createdProjectRateEntity = rateRepository.save(rateEntity);
+
+                    createdProjectRateEntity.getProjectAssignmentsEntity().stream().forEach(
+                            assignment -> {
+                                assignment.setProjectRateEntity(createdProjectRateEntity);
+                                assignmentRepository.save(assignment);
+                            }
+                    );
+                });
+
+        ////
+
+        projectEntity.setComments(projectToBeUpdatedEntity.getComments());
+        projectEntity.setName(projectToBeUpdatedEntity.getName());
+        projectEntity.setActive(projectToBeUpdatedEntity.getActive());
+        projectEntity.setRates(null);
+
         projectRepository.save(projectEntity);
-        return projectMapper.fromEntityToBo(projectEntity);
+        return projectMapper.fromEntityToBo(projectToBeUpdatedEntity);
     }
 
     public void deleteProjectByGuid(String guid) {
@@ -131,69 +180,4 @@ public class ProjectService {
         }
 
     }
-
-    private void updateProjectFields(ProjectBo projectBo, ProjectEntity projectEntity) {
-        ClientEntity clientEntity = clientRepository.findByGuid(projectBo.getClientGuid()).orElseThrow(ClientNotFoundException::new);
-        projectEntity.setClientEntity(clientEntity);
-        projectEntity.setName(projectBo.getName() == null ? projectEntity.getName() : projectBo.getName());
-        projectEntity.setComments(projectBo.getComments() == null ? projectEntity.getComments() : projectBo.getComments());
-        projectEntity.setActive(projectBo.getActive());
-        projectEntity.setDepartmentGuid(projectBo.getDepartmentGuid() == null ? projectEntity.getDepartmentGuid() : projectBo.getDepartmentGuid());
-        projectEntity.setOffSiteOnly(projectBo.getOffSiteOnly());
-
-        if (!projectBo.getRates().isEmpty()) {
-
-
-            for (RateBo rate : projectBo.getRates()) {
-
-                // TODO: Get role by GUID not ID -> new method in repository
-                ProjectRoleEntity projectRoleEntity = roleRepository.findByRoleGuid(rate.getRoleId()).orElseThrow(RoleNotFoundException::new);
-
-                ProjectRateEntity projectRateEntity = rateRepository.findByProjectRoleEntityAndProjectEntity_Guid(projectRoleEntity, projectEntity.getGuid());
-
-                if (projectRateEntity == null) {
-                    projectRateEntity = new ProjectRateEntity();
-                }
-
-                projectRateEntity.setRate(rate.getRate());
-                if (projectEntity.getOffSiteOnly()) {
-                    projectRateEntity.setOnSiteRate(BigDecimal.ZERO);
-                } else {
-                    projectRateEntity.setOnSiteRate(rate.getOnSiteRate());
-                }
-
-                List<ProjectAssignmentsEntity> projectAssignmentsEntityList = new ArrayList<>();
-
-                projectRateEntity.setProjectAssignmentsEntity(projectAssignmentsEntityList);
-
-                projectRateEntity.setProjectEntity(projectEntity);
-
-                projectRateEntity.setProjectRoleEntity(projectRoleEntity);
-
-                rateRepository.save(projectRateEntity);
-
-                roleRepository.save(projectRoleEntity);
-
-                for (String consultantGuid : rate.getConsultants()) {
-
-                    if (!assignmentRepository.existsByUserGuidAndProjectRateEntity(consultantGuid, projectRateEntity)) {
-                        ProjectAssignmentsEntity projectAssignmentsEntity = new ProjectAssignmentsEntity();
-                        projectAssignmentsEntity.setUserGuid(consultantGuid);
-                        projectAssignmentsEntity.setProjectRateEntity(projectRateEntity);
-                        projectAssignmentsEntityList.add(projectAssignmentsEntity);
-                        assignmentRepository.save(projectAssignmentsEntity);
-                    }
-
-
-                }
-
-
-            }
-
-
-        }
-
-    }
-
-
 }
