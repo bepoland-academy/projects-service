@@ -37,4 +37,5 @@ public class RateService {
         return rateRepository.findAll().stream().map(rateMapper::fromEntityToBo).collect(Collectors.toList());
     }
 
+
 }
